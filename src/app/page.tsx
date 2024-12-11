@@ -26,7 +26,7 @@ export default function Home() {
 	};
 
 	const getDataByNF = async () => {
-		setResult(null);
+		setResult([]);
 		if (!connection) {
 			console.log("Conexão não estabelecida");
 			return;
