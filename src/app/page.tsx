@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Connection, QueryResult, type Schema } from "jsforce";
 
 interface Invoice {
-    Id: string;
+
     NinePositionsDocumentNumber__c: string;
     EnderecoEntrega__c: string;
     Neighborhood__c: string;
@@ -38,6 +38,7 @@ export default function Home() {
 
     const getDataByNF = async () => {
         setResult([]);
+
         if (!connection) {
             console.log("Conexão não estabelecida");
             return;
@@ -46,7 +47,7 @@ export default function Home() {
             "https://cors-anywhere.herokuapp.com/https://bemoldigital.lightning.force.com";
         try {
             const res = await connection.query<Invoice>(
-                `SELECT NinePositionsDocumentNumber__c, EnderecoEntrega__c, Neighborhood__c, NameOne__c, Referencia__c, CidadeEstadoEntrega__c, CepEntrega__c, Id FROM Invoice__c WHERE Name = '${nf}'`,
+                `SELECT NinePositionsDocumentNumber__c, EnderecoEntrega__c, Neighborhood__c, NameOne__c, Referencia__c, CidadeEstadoEntrega__c, CepEntrega__c FROM Invoice__c WHERE Name = '${nf}'`,
             );
 
             if (res?.records) {
@@ -88,7 +89,7 @@ export default function Home() {
             {result.length > 0 ? (
                 <ul>
                     {result.map((record) => (
-                        <li key={record.Id}>
+                        <li key={record.NameOne__c}>
                             <p>
                                 <strong>Documento:</strong> {record.NinePositionsDocumentNumber__c}
                             </p>
