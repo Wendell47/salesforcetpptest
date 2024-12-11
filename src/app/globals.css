@@ -17,5 +17,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  display: grid;
+  place-content: center;
   font-family: Arial, Helvetica, sans-serif;
 }
