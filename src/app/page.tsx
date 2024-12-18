@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Connection, type Schema } from "jsforce";
-import type { Invoice, User } from "./types/Invoice";
+import type { HistoricoCac, Invoice, User } from "./types/Invoice";
 import Input from "./components/input";
 import Item from "./components/Item";
 
+type InvoiceWithHistory = Invoice & { CacHistory__c: string };
+type InvoiceWithHistoryObject = Invoice & { CacHistory__c: HistoricoCac[] };
 export default function Home() {
-	const [result, setResult] = useState<Invoice[]>([]);
+	const [result, setResult] = useState<InvoiceWithHistoryObject[]>([]);
 	const [user, setUser] = useState<User[]>([]);
 	const [nf, setNf] = useState<string>("");
 	const [connection, setConnection] = useState<Connection<Schema> | null>(null);
@@ -22,12 +24,16 @@ export default function Home() {
 			"https://cors-anywhere.herokuapp.com/https://bemoldigital.lightning.force.com";
 		try {
 			const res = await connection.query<Invoice>(
-				`SELECT NinePositionsDocumentNumber__c, EnderecoEntrega__c, Neighborhood__c, NameOne__c, Referencia__c, CidadeEstadoEntrega__c, CepEntrega__c,AccountLookup__c, Id FROM Invoice__c WHERE Name = '${nf}'`,
+				`SELECT NinePositionsDocumentNumber__c, EnderecoEntrega__c, Neighborhood__c, NameOne__c, Referencia__c, CidadeEstadoEntrega__c, CepEntrega__c, AccountLookup__c, Id,CacHistory__c FROM Invoice__c WHERE Name = '${nf}'`,
 			);
 
 			if (res?.records) {
-				console.log("Resultados da consulta:", res.records);
-				setResult(res.records);
+				const parsedRecords = res.records.map((record) => ({
+					...record,
+					CacHistory__c: JSON.parse(record.CacHistory__c),
+				}));
+				setResult(parsedRecords);
+				console.log("Resultados da consulta:", parsedRecords[0].CacHistory__c);
 			} else {
 				console.log("A consulta não retornou resultados:", res);
 			}
@@ -47,7 +53,7 @@ export default function Home() {
 			"https://cors-anywhere.herokuapp.com/https://bemoldigital.lightning.force.com";
 		try {
 			const res = await connection.query<User>(
-				`SELECT DDDPhone__c, DDDPhoneTwo__c, Email__c FROM  Account  WHERE Id = '${id}'`,
+				`SELECT DDDPhone__c, DDDPhoneTwo__c, Email__c FROM Account WHERE Id = '${id}'`,
 			);
 			if (res?.records) {
 				console.log("Resultados da consulta:", res.records);
@@ -139,29 +145,28 @@ export default function Home() {
 									<Item title="CEP" dataInfo={record.CepEntrega__c} />
 									<Item title="Referência" dataInfo={record.Referencia__c} />
 								</div>
-								{user.length > 0 ? (
-									<div className="flex gap-2 flex-wrap">
-										<ul>
-											{user.map((u) => (
-												<li key={u.Id} className="flex gap-5 flex-wrap">
-													<Item
-														title="Contato Principal"
-														dataInfo={u.DDDPhone__c}
-													/>
-													<Item
-														title="Contato Secundario"
-														dataInfo={u.DDDPhoneTwo__c}
-													/>
-												</li>
-											))}
-										</ul>
-									</div>
-								) : (
-									<p>Carregando...</p>
-								)}
 							</li>
 						))}
 					</ul>
+				) : (
+					<p>Carregando...</p>
+				)}
+			</div>
+			<div className="p-6 bg-neutral-800 rounded-lg">
+				{user.length > 0 ? (
+					<div className="flex gap-2 flex-wrap">
+						<ul>
+							{user.map((u) => (
+								<li key={u.Id} className="flex gap-5 flex-wrap">
+									<Item title="Contato Principal" dataInfo={u.DDDPhone__c} />
+									<Item
+										title="Contato Secundário"
+										dataInfo={u.DDDPhoneTwo__c}
+									/>
+								</li>
+							))}
+						</ul>
+					</div>
 				) : (
 					<p>Carregando...</p>
 				)}

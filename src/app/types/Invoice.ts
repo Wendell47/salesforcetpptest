@@ -8,8 +8,18 @@ export interface Invoice {
 	CepEntrega__c: string;
 	AccountLookup__c: string;
 	Id: string;
+	CacHistory__c: string;
 }
 
+export interface HistoricoCac {
+	OCORRENCIA: string;
+	LOJA: string;
+	ID_CONTATO: string;
+	HORA: string;
+	DESCRICAO: string;
+	DATA: string;
+	AUTOR: string;
+}
 export interface User {
 	Id: string;
 	DDDPhone__c: string;
