@@ -78,7 +78,7 @@ export default function Home() {
 			"https://cors-anywhere.herokuapp.com/https://bemoldigital.lightning.force.com";
 		try {
 			const res = await connection.query<User>(
-				`SELECT DDDPhone__c, DDDPhoneTwo__c, Email__c FROM Account WHERE Id = '${id}'`,
+				`SELECT DDDPhone__c, DDDPhoneTwo__c, Email__c,ExternalId__c FROM Account WHERE Id = '${id}'`,
 			);
 			if (res?.records) {
 				console.log("Resultados da consulta:");
@@ -203,7 +203,7 @@ export default function Home() {
 						{NfProducts.map((u) => (
 							<li key={u.Id} className="flex gap-5 flex-wrap flex-auto">
 								<Item title="Código do Produto" dataInfo={u.MaterialNumber__c} className="flex" />
-								<Item title="Produto" dataInfo={u.Name}  className="flex-[10]"/>
+								<Item title="Produto" dataInfo={u.Name}  className="!flex-[10]"/>
 								<Item title="Quantidade" dataInfo={u.Amount__c}  />
 							</li>
 						))}

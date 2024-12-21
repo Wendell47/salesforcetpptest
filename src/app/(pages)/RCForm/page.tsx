@@ -7,7 +7,7 @@ import { use, useState } from "react";
 export default function RCForm() {
 	const { invoice, user,NfProducts} = useInvoiceStore();
 	const [Text, setText] = useState("");
-	const [textHeight, setHeight] = useState(25);
+	const [textHeight, setHeight] = useState(28);
 	const [hide, setHide] = useState(false);
 	const [hideOptions, setHideOptions] = useState(false);
 	const[index,setIndex]=useState(0);
@@ -60,7 +60,7 @@ export default function RCForm() {
 							</div>
 							<div className="flex-[1] basis-[60%]  p-2">
 								<p>
-									<span className="opacity-65">CLIENTE:</span> 199830 - {data.NameOne__c}
+									<span className="opacity-65">CLIENTE:</span> {user[0].ExternalId__c} - {data.NameOne__c}
 								</p>
 							</div>
 
@@ -73,21 +73,22 @@ export default function RCForm() {
 									Endereço do Cliente
 								</h1>
 							</div>
-							<div className="flex-1 basis-1/2 border-r border-b  p-2">
-								<span className="opacity-65">Endereço de Entrega</span>
-								<p>{data.EnderecoEntrega__c}</p>
-							</div>
-							<div className="flex-1 basis-1/2 border-r border-b p-2">
+							
+							<div className="flex-1 basis-1/3 border-r  p-2">
 								<span className="opacity-65">Bairro</span>
 								<p>{data.Neighborhood__c}</p>
 							</div>
-							<div className="flex-1 basis-1/2 border-r   p-2">
+							<div className="flex-1 basis-1/3 border-r   p-2">
 								<span className="opacity-65">CEP</span>
 								<p>{data.CepEntrega__c}</p>
 							</div>
-							<div className="flex-1 basis-1/2   p-2">
+							<div className="flex-1 basis-1/3   p-2">
 								<span className="opacity-65">Cidade/Estado</span>
 								<p>{data.CidadeEstadoEntrega__c}</p>
+							</div>
+							<div className="flex-1 basis-full border-b border-t p-2">
+								<span className="opacity-65">Endereço de Entrega</span>
+								<p>{data.EnderecoEntrega__c}</p>
 							</div>
 						</div>
 
