@@ -22,12 +22,23 @@ export interface HistoricoCac {
 }
 export interface User {
 	Id: string;
+	ExternalId__c:string;
 	DDDPhone__c: string;
 	DDDPhoneTwo__c: string;
 	Email__c: string;
 }
 
+export interface NfProducts{
+	Id:string;
+	Name:string;
+	Amount__c: string;
+	MaterialNumber__c: string;
+}
 export interface UserContacts {
 	Name: string;
 	Phone: string;
 }
+
+export type InvoiceWithHistoryObject = Invoice & {
+	CacHistory__c: HistoricoCac[];
+};

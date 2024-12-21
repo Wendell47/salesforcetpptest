@@ -1,30 +1,35 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Connection, type Schema } from "jsforce";
-import type { HistoricoCac, Invoice, User } from "./types/Invoice";
+import type { Invoice, NfProducts, User } from "./types/Invoice";
 import Input from "./components/input";
 import Item from "./components/Item";
+import { useInvoiceStore } from "./hooks/stores/dataStore";
+import { NotepadText } from "lucide-react";
+import {useRouter} from 'next/navigation'
 
-type InvoiceWithHistory = Invoice & { CacHistory__c: string };
-type InvoiceWithHistoryObject = Invoice & { CacHistory__c: HistoricoCac[] };
 export default function Home() {
-	const [result, setResult] = useState<InvoiceWithHistoryObject[]>([]);
-	const [user, setUser] = useState<User[]>([]);
+	const router = useRouter()
+	const { invoice, NfProducts, user, setUser,setNfPRoducts,setInvoice } = useInvoiceStore();
 	const [nf, setNf] = useState<string>("");
+	const [serie, setSerie] = useState<string>("104");
 	const [connection, setConnection] = useState<Connection<Schema> | null>(null);
 
 	const getDataByNF = async () => {
-		setResult([]);
-
 		if (!connection) {
 			console.log("Conexão não estabelecida");
 			return;
 		}
 		connection.instanceUrl =
 			"https://cors-anywhere.herokuapp.com/https://bemoldigital.lightning.force.com";
+
 		try {
 			const res = await connection.query<Invoice>(
-				`SELECT NinePositionsDocumentNumber__c, EnderecoEntrega__c, Neighborhood__c, NameOne__c, Referencia__c, CidadeEstadoEntrega__c, CepEntrega__c, AccountLookup__c, Id,CacHistory__c FROM Invoice__c WHERE Name = '${nf}'`,
+				`SELECT NinePositionsDocumentNumber__c , EnderecoEntrega__c, Neighborhood__c, NameOne__c, Referencia__c, CidadeEstadoEntrega__c, CepEntrega__c, AccountLookup__c, Id, CacHistory__c 
+				FROM Invoice__c 
+				WHERE NinePositionsDocumentNumber__c = '${nf}'
+				AND Serie__c = '${serie}'
+				`,
 			);
 
 			if (res?.records) {
@@ -32,8 +37,8 @@ export default function Home() {
 					...record,
 					CacHistory__c: JSON.parse(record.CacHistory__c),
 				}));
-				setResult(parsedRecords);
-				console.log("Resultados da consulta:", parsedRecords[0].CacHistory__c);
+				setInvoice(parsedRecords);
+				console.log("Resultados da consulta:", parsedRecords[0]);
 			} else {
 				console.log("A consulta não retornou resultados:", res);
 			}
@@ -42,9 +47,29 @@ export default function Home() {
 		}
 	};
 
-	const getUser = async (id: string) => {
-		setUser([]);
+	const getNfProducts = async (id: string) => {
+		if (!connection) {
+			console.log("Conexão não estabelecida");
+			return;
+		}
 
+		connection.instanceUrl =
+			"https://cors-anywhere.herokuapp.com/https://bemoldigital.lightning.force.com";
+		try {
+			const res = await connection.query<NfProducts>(
+				`SELECT Name , Id, MaterialNumber__c,Amount__c  FROM InvoiceItems__c WHERE InvoiceId__c = '${id}'`,
+			);
+			if (res?.records) {
+				console.log("Resultados da consulta:");
+				setNfPRoducts(res.records);
+			} else {
+				console.log("A consulta não retornou resultados:", res);
+			}
+		} catch (error) {
+			console.error("Erro na execução da consulta:", error);
+		}
+	};
+	const getUser = async (id: string) => {
 		if (!connection) {
 			console.log("Conexão não estabelecida");
 			return;
@@ -56,7 +81,7 @@ export default function Home() {
 				`SELECT DDDPhone__c, DDDPhoneTwo__c, Email__c FROM Account WHERE Id = '${id}'`,
 			);
 			if (res?.records) {
-				console.log("Resultados da consulta:", res.records);
+				console.log("Resultados da consulta:");
 				setUser(res.records);
 			} else {
 				console.log("A consulta não retornou resultados:", res);
@@ -84,18 +109,21 @@ export default function Home() {
 				console.error("Erro na conexão ou consulta:", error);
 			}
 		};
-		conn();
+		if (invoice.length === 0) {
+			conn();
+		}
 	}, []);
 
 	// Trigger getUser whenever result changes
 	useEffect(() => {
-		if (result.length > 0) {
-			getUser(result[0].AccountLookup__c);
+		if (invoice.length > 0) {
+			getUser(invoice[0].AccountLookup__c);
+			getNfProducts(invoice[0].Id);
 		}
-	}, [result]);
+	}, [invoice]);
 
 	return (
-		<div className="max-w-lg w-full flex gap-2 flex-col">
+		<div className="max-w-4xl w-full flex gap-2 flex-col">
 			<div className="p-6 bg-neutral-800 rounded-lg">
 				<h1 className="font-bold text-2xl mb-3">Consulta de NF</h1>
 
@@ -108,9 +136,10 @@ export default function Home() {
 					/>
 					<Input
 						title="Série"
-						onChange={(e) => setNf(e.target.value)}
-						maxLength={9}
-						className="flex-1"
+						maxLength={3}
+						defaultValue={104}
+						onChange={(e) => setSerie(e.target.value)}
+						className="flex-1 appearance-none"
 					/>
 
 					<button
@@ -121,11 +150,12 @@ export default function Home() {
 						Buscar
 					</button>
 				</form>
+				<div></div>
 			</div>
 			<div className="p-6 bg-neutral-800 rounded-lg">
-				{result.length > 0 ? (
+				{invoice.length > 0 ? (
 					<ul>
-						{result.map((record) => (
+						{invoice.map((record) => (
 							<li key={record.Id} className="flex gap-2 flex-wrap">
 								<div className="flex gap-2 flex-wrap">
 									<Item
@@ -154,23 +184,45 @@ export default function Home() {
 			</div>
 			<div className="p-6 bg-neutral-800 rounded-lg">
 				{user.length > 0 ? (
-					<div className="flex gap-2 flex-wrap">
-						<ul>
-							{user.map((u) => (
-								<li key={u.Id} className="flex gap-5 flex-wrap">
-									<Item title="Contato Principal" dataInfo={u.DDDPhone__c} />
-									<Item
-										title="Contato Secundário"
-										dataInfo={u.DDDPhoneTwo__c}
-									/>
-								</li>
-							))}
-						</ul>
-					</div>
+					<ul className="flex gap-2 flex-wrap">
+						{user.map((u) => (
+							<li key={u.Id} className="flex gap-5 flex-wrap">
+								<Item title="Contato Principal" dataInfo={u.DDDPhone__c} />
+								<Item title="Contato Secundário" dataInfo={u.DDDPhoneTwo__c} />
+							</li>
+						))}
+					</ul>
 				) : (
 					<p>Carregando...</p>
 				)}
 			</div>
+			<div className="p-6 bg-neutral-800 rounded-lg">
+				<div className="flex justify-between mb-3"><h4 className="text-xl">Produto</h4> <p className="text-lg"><span className="text-neutral-500">Itens:</span> {NfProducts.length}</p></div>
+				{NfProducts.length > 0 ? (
+					<ul className="flex gap-2 flex-wrap">
+						{NfProducts.map((u) => (
+							<li key={u.Id} className="flex gap-5 flex-wrap flex-auto">
+								<Item title="Código do Produto" dataInfo={u.MaterialNumber__c} className="flex" />
+								<Item title="Produto" dataInfo={u.Name}  className="flex-[10]"/>
+								<Item title="Quantidade" dataInfo={u.Amount__c}  />
+							</li>
+						))}
+					</ul>
+				) : (
+					<p>Carregando...</p>
+				)}
+			</div>
+			{invoice.length > 0 && (
+				<div>
+					<button
+						type="button"
+						className="flex gap-2 p-3 rounded-lg bg-blue-600 text-blue-100 font-bold flex-1"
+						onClick={() => router.push('/RCForm')}
+					>
+						<NotepadText /> Gerar formulario
+					</button>
+				</div>
+			)}
 		</div>
 	);
 }
