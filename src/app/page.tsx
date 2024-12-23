@@ -10,10 +10,9 @@ import {useRouter} from 'next/navigation'
 
 export default function Home() {
 	const router = useRouter()
-	const { invoice, NfProducts, user, setUser,setNfPRoducts,setInvoice } = useInvoiceStore();
+	const { invoice, NfProducts, user, connection,setUser,setNfPRoducts,setConnection,setInvoice } = useInvoiceStore();
 	const [nf, setNf] = useState<string>("");
 	const [serie, setSerie] = useState<string>("104");
-	const [connection, setConnection] = useState<Connection<Schema> | null>(null);
 
 	const getDataByNF = async () => {
 		if (!connection) {
