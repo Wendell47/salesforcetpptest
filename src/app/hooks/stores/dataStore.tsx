@@ -1,5 +1,6 @@
 import type { Invoice, InvoiceWithHistoryObject, NfProducts, User } from "@/app/types/Invoice";
-import { create,Connection, type Schema } from "zustand";
+import { create } from "zustand";
+import { Connection, type Schema } from "jsforce";
 
 type dataStoreProps = {
 	invoice: InvoiceWithHistoryObject[];
