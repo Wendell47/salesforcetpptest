@@ -33,7 +33,3 @@ input[type=number]::-webkit-inner-spin-button {
 input[type=number] {
   overflow: hidden;
 }
-/* Para Firefox */
-input[type=number] {
-    -moz-appearance: textfield;
-}

@@ -42,7 +42,9 @@ export default function RCForm() {
 							Prioridade!
 						</h1>
 						<div className="flex items-end mb-5" onFocus={() => setHide(true)}>
+							<label htmlFor="description" className="hidden">description</label>
 							<textarea
+								id="description"
 								className="text-center w-full text-lg font-bold  bg-transparent resize-none"
 								defaultValue="POR GENTILEZA, REALIZAR ENTREGA DO ITEM FALTANTE"
 								style={{ height: textHeight }}
@@ -76,7 +78,7 @@ export default function RCForm() {
 							
 							<div className="flex-1 basis-1/3 border-r  p-2">
 								<span className="opacity-65">Bairro</span>
-								<p>{data.Neighborhood__c}</p>
+								<p>{data.BairroEntrega__c}</p>
 							</div>
 							<div className="flex-1 basis-1/3 border-r   p-2">
 								<span className="opacity-65">CEP</span>

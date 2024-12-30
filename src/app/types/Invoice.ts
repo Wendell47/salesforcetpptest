@@ -1,7 +1,7 @@
 export interface Invoice {
 	NinePositionsDocumentNumber__c: string;
 	EnderecoEntrega__c: string;
-	Neighborhood__c: string;
+	BairroEntrega__c: string;
 	NameOne__c: string;
 	Referencia__c: string;
 	CidadeEstadoEntrega__c: string;
@@ -19,6 +19,17 @@ export interface HistoricoCac {
 	DESCRICAO: string;
 	DATA: string;
 	AUTOR: string;
+}
+export interface cacHistoryC{
+	E_DATA_PROV_ENTREGA: string
+	E_DATA_PROV_MONTAGEM: string
+	E_MESSAGE: string
+	E_STATUS: string
+	T_HISTORICO_CAC: HistoricoCac[]
+	T_INFO:string 
+	T_NF_HEADER: string
+	T_NF_ITEM: string
+	T_STATUS_TRANSPORTE: string
 }
 export interface User {
 	Id: string;
@@ -39,6 +50,17 @@ export interface UserContacts {
 	Phone: string;
 }
 
+
+export interface Cases{
+	Id:string;
+	ClientName__c:string
+	CaseNumber:string
+	Serie_Nf__c:string
+	CLI__c:string
+	CreatedDate:Date
+	CheckIn__c:Date
+	Divisao__c:string
+}
 export type InvoiceWithHistoryObject = Invoice & {
-	CacHistory__c: HistoricoCac[];
+	CacHistory__c: cacHistoryC;
 };
