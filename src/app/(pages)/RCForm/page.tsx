@@ -25,10 +25,11 @@ export default function RCForm() {
 		invoice.map((data) => (
 			<div
 				key={data.Id}
-				className="p-10 w-[210mm] h-[297mm] rounded-md border border-solid border-neutral-800 bg-neutral-900 print:border-transparent"
+				id="RCForm"
+				className="p-10 w-[210mm] h-[297mm] rounded-md border border-solid bg-white border-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 print:border-transparent"
 			>
 				<div className="flex flex-col items-center gap-2 h-full">
-					<section className="flex flex-1 p-3 flex-col gap-3">
+					<section className="flex flex-1 p-3 flex-col gap-3 ">
 						<Image
 							className="self-center"
 							alt="logo"
@@ -42,7 +43,7 @@ export default function RCForm() {
 							Prioridade!
 						</h1>
 						<div className="flex items-end mb-5" onFocus={() => setHide(true)}>
-							<label htmlFor="description" className="hidden">description</label>
+							<label htmlFor="description" className="!hidden">description</label>
 							<textarea
 								id="description"
 								className="text-center w-full text-lg font-bold  bg-transparent resize-none"
@@ -77,20 +78,20 @@ export default function RCForm() {
 							</div>
 							
 							<div className="flex-1 basis-1/3 border-r  p-2">
-								<span className="opacity-65">Bairro</span>
-								<p>{data.BairroEntrega__c}</p>
+								<label className="opacity-65"  htmlFor="BairroEntrega__c">Bairro</label>
+								<input id="BairroEntrega__c" defaultValue={data.BairroEntrega__c} />
 							</div>
 							<div className="flex-1 basis-1/3 border-r   p-2">
-								<span className="opacity-65">CEP</span>
-								<p>{data.CepEntrega__c}</p>
+								<label className="opacity-65" htmlFor="CepEntrega__c">CEP</label>
+								<input id="CepEntrega__c" defaultValue={data.CepEntrega__c} />
 							</div>
 							<div className="flex-1 basis-1/3   p-2">
-								<span className="opacity-65">Cidade/Estado</span>
-								<p>{data.CidadeEstadoEntrega__c}</p>
+								<label className="opacity-65"  htmlFor="CidadeEstadoEntrega__c">Cidade/Estado</label>
+								<input id="CidadeEstadoEntrega__c" defaultValue={data.CidadeEstadoEntrega__c} />
 							</div>
-							<div className="flex-1 basis-full border-b border-t p-2">
-								<span className="opacity-65">Endereço de Entrega</span>
-								<p>{data.EnderecoEntrega__c}</p>
+							<div className="flex-1 basis-full  border-t p-2">
+								<label className="opacity-65"  htmlFor="EnderecoEntrega__c">Endereço de Entrega</label>
+								<input id="EnderecoEntrega__c" defaultValue={data.EnderecoEntrega__c} />
 							</div>
 						</div>
 
@@ -112,7 +113,7 @@ export default function RCForm() {
 								<button className="font-bold uppercase flex gap-1" onClick={()=>setHideOptions(false)}>Produto <ChevronDown /></button>
 								
 							</div>
-							<div className="flex-1 basis-1/4   p-2">
+							<div className="flex-1 basis-1/1   p-2">
 								<span className="opacity-65">Código</span>
 								<p>{NfProducts[index].MaterialNumber__c}</p>
 							</div>
@@ -121,19 +122,23 @@ export default function RCForm() {
 								<p>{NfProducts[index].Name}</p>
 							
 							</div>
+							<div className="flex-1 basis-1/1 border-l   p-2">
+								<span className="opacity-65">Quantidade</span>
+								<p>{NfProducts[index].Amount__c}</p>
+							
+							</div>
 
-							<div className={`absolute w-full  rounded-lg border-neutral-700 bg-neutral-600 mt-12 flex flex-col overflow-hidden ${hideOptions ? "hidden" : "show"}`}>{
+							<div className={`absolute  inset-x-0 rounded-lg border border-neutral-200 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-700 mt-12 mx-2 flex flex-col overflow-hidden ${hideOptions ? "hidden" : "show"}`}>{
 								NfProducts.map((product, index)=>(
-									<button key={product.Id} className={`text-left p-2 hover:bg-neutral-500	focus:bg-neutral-500 focus:outline-none`}onClick={()=>handleOptions(index)}>{product.MaterialNumber__c} - {product.Name}</button>
+									<button key={product.Id} className={`text-left p-2  hover:bg-neutral-200 dark:hover:bg-neutral-500	focus:bg-neutral-500 focus:outline-none`}onClick={()=>handleOptions(index)}>{product.MaterialNumber__c} - {product.Name}</button>
 								))
 								}</div>
 						</div>
 					</section>
 					<section className="w-full ">
 						<div className="flex-1 pb-8 border-b ">
-							<p className="text-center mb-5">
-								AOS CUIDADOS DO GUILHERME TRINDADE
-							</p>
+						<label className="opacity-65 !hidden"  htmlFor="Signature">Endereço de Entrega</label>
+							<input id="Signature" className="text-center mb-5 w-full" defaultValue={"AOS CUIDADOS DO GUILHERME TRINDADE"}/>
 							<p className="text-center text-neutral-400">Assinatura:</p>
 						</div>
 					</section>

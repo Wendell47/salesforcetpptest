@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #f5f5f5;
   --foreground: #171717;
 }
 
@@ -24,6 +24,19 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+#RCForm{
+  label{
+    display: block;
+  }
+}
+
+button{
+  transition: 140ms ease-in-out;
+}
+input,textarea{
+  outline: none;
+  background: transparent;
+}
 /* Para Webkit Browsers (Chrome, Safari, Edge) */
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {

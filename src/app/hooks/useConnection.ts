@@ -13,6 +13,7 @@ const useConnection = () => {
 		invoice,
 		connection,
 		setUser,
+		setIsLoading,
 		setCases,
 		setNfPRoducts,
 		setConnection,
@@ -21,14 +22,17 @@ const useConnection = () => {
 
 	const getData = async (nf: string, serie: string) => {
 		try {
+			setIsLoading(true);
 			const data = await getDataByNF({ connection, nf, serie });
 			if (data) {
+				setIsLoading(false);
 				setInvoice(data);
 				userData(data[0].AccountLookup__c);
 				NfProductsData(data[0].Id);
 			}
 		} catch (error) {
 			console.log(error);
+			setIsLoading(false);
 		}
 	};
 
