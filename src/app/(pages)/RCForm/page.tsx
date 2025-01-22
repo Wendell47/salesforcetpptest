@@ -18,7 +18,7 @@ export default function RCForm() {
 	}
 	function handleOptions(e:number){
 		setIndex(e)
-		setHideOptions(!hideOptions)	
+		setHideOptions(!hideOptions)	                                                     
 	}
 	console.log(invoice[0]);
 	return invoice.length > 0 ? (

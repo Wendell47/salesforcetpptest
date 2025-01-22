@@ -14,7 +14,7 @@ export default function Home() {
 	const [serie, setSerie] = useState<string>("104");
 	const { getData } = useConnection();
 	
-	const { invoice,isLoading} = useInvoiceStore();
+	const { invoice,connection,isLoading} = useInvoiceStore();
 	console.log(invoice);
 	return (
 		<div className="max-w-4xl w-full flex gap-2 flex-col">
@@ -45,9 +45,10 @@ export default function Home() {
 					
 				</form>
 			</Block>
-				{invoice.length > 0 ? (
+				{invoice.length < 0 ? (
 					<NFData/>
 				):(
+					<>
 					<Image
 					alt=""
 					src={"/ilustr.svg"}
@@ -55,6 +56,18 @@ export default function Home() {
 					height={500}
 					className="w-full"
 					/>
+
+					{connection! && 
+					
+					(
+						<>
+						<h1 className="text-xl text-center">O acesso temporário acabou, Acesse o link abaixo e pressione o botão <code className="p-1 rounded-sm  bg-neutral-300 dark:bg-neutral-800">Request temporary access to the demo server</code>. <br/> Depois retorne e recarregue esse site para acessar dados do SalesForce.</h1>
+						<Button title="Acessar Link" isLoading={false} link="https://cors-anywhere.herokuapp.com/corsdemo"/>
+						</>
+					)
+					}
+					</>
+
 				)}
 		</div>
 	);
