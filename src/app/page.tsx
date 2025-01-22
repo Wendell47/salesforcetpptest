@@ -57,7 +57,7 @@ export default function Home() {
 					className="w-full"
 					/>
 
-					{connection  ?
+					{!connection  ?
 					
 					(
 						<>
