@@ -24,7 +24,7 @@ const useConnection = () => {
 		try {
 			setIsLoading(true);
 			const data = await getDataByNF({ connection, nf, serie });
-			if (data.length > 0) {
+			if (data && data.length > 0) {
 				setInvoice(data);
 				userData(data[0].AccountLookup__c);
 				NfProductsData(data[0].Id);
