@@ -12,7 +12,7 @@ import { useInvoiceStore } from "./hooks/stores/dataStore";
 export default function Home() {
 	const [nf, setNf] = useState<string>("");
 	const [serie, setSerie] = useState<string>("104");
-	const { getData } = useConnection();
+	const { getData,notFound } = useConnection();
 	
 	const { invoice,connection,isLoading} = useInvoiceStore();
 	console.log(invoice);
@@ -26,7 +26,7 @@ export default function Home() {
 						title="NF"
 						onChange={(e) => setNf(e.target.value)}
 						maxLength={9}
-						className="flex-[8]"
+						className="flex-[5]"
 					/>
 					<Input
 						title="Série"
@@ -57,15 +57,15 @@ export default function Home() {
 					className="w-full"
 					/>
 
-					{!connection  ?
+					{!connection  &&
 					
 					(
 						<>
 						<h1 className="text-xl text-center">O acesso temporário acabou, Acesse o link abaixo e pressione o botão <code className="p-1 rounded-sm  bg-neutral-300 dark:bg-neutral-800">Request temporary access to the demo server</code>. <br/> Depois retorne e recarregue esse site para acessar dados do SalesForce.</h1>
 						<Button title="Acessar Link" isLoading={false} link="https://cors-anywhere.herokuapp.com/corsdemo"/>
 						</>
-					)
-					:
+					)}
+					{ notFound &&
 					(
 						<>
 						<h1 className="text-2xl text-center">Não encontramos dados para essa nota! </h1>

@@ -1,4 +1,4 @@
-import { use, useEffect } from "react";
+import { use, useEffect,useState } from "react";
 import {
 	conn,
 	getCases,
@@ -19,17 +19,19 @@ const useConnection = () => {
 		setConnection,
 		setInvoice,
 	} = useInvoiceStore();
-
+	const [notFound, setNotFound] = useState(false);
 	const getData = async (nf: string, serie: string) => {
 		try {
 			setIsLoading(true);
 			const data = await getDataByNF({ connection, nf, serie });
-			if (data) {
-				setIsLoading(false);
+			if (data.length > 0) {
 				setInvoice(data);
 				userData(data[0].AccountLookup__c);
 				NfProductsData(data[0].Id);
+			}else{
+				setNotFound(true);
 			}
+			setIsLoading(false);
 		} catch (error) {
 			console.log(error);
 			setIsLoading(false);
@@ -82,7 +84,7 @@ const useConnection = () => {
 				});
 		}
 	}, [invoice.length, setConnection]);
-	return { getData, Cases };
+	return { getData, Cases,notFound };
 };
 
 export { useConnection };
