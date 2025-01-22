@@ -12,11 +12,11 @@ export default function Button({title,link,isLoading=true,...rest}:Props) {
     return(
         <button
         type="button"
-        className="p-2 rounded-lg bg-blue-600 text-white font-bold flex-1 flex items-center justify-center  disabled:bg-neutral-400 dark:disabled:bg-neutral-500"
+        className="p-2 rounded-lg bg-blue-600 text-white font-bold flex-1 flex items-center justify-center  disabled:bg-neutral-400 dark:disabled:bg-neutral-500 hover:bg-blue-700"
         {...rest}
     >
         {link ? Link:isLoading?<Loader2 size={24} className="animate-spin"/>:title}
-
+        
     </button>
     )
 }

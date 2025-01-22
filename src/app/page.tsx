@@ -21,12 +21,12 @@ export default function Home() {
 			<Block >
 				<h1 className="font-bold text-2xl mb-3">Consultar NF</h1>
 
-				<form className="flex gap-3">
+				<form className="flex gap-3 flex-wrap">
 					<Input
 						title="NF"
 						onChange={(e) => setNf(e.target.value)}
 						maxLength={9}
-						className="flex-[2]"
+						className="flex-[8]"
 					/>
 					<Input
 						title="Série"
@@ -45,7 +45,7 @@ export default function Home() {
 					
 				</form>
 			</Block>
-				{invoice.length < 0 ? (
+				{invoice.length > 0 ? (
 					<NFData/>
 				):(
 					<>
@@ -57,12 +57,21 @@ export default function Home() {
 					className="w-full"
 					/>
 
-					{connection! && 
+					{connection  ?
 					
 					(
 						<>
 						<h1 className="text-xl text-center">O acesso temporário acabou, Acesse o link abaixo e pressione o botão <code className="p-1 rounded-sm  bg-neutral-300 dark:bg-neutral-800">Request temporary access to the demo server</code>. <br/> Depois retorne e recarregue esse site para acessar dados do SalesForce.</h1>
 						<Button title="Acessar Link" isLoading={false} link="https://cors-anywhere.herokuapp.com/corsdemo"/>
+						</>
+					)
+					:
+					(
+						<>
+						<h1 className="text-2xl text-center">Não encontramos dados para essa nota! </h1>
+						<p className="text-center">
+						Verifique se inseriu corretamente a nota ou se já foi consultada no  SalesForce.
+						</p>
 						</>
 					)
 					}
