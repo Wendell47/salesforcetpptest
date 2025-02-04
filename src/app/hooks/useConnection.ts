@@ -1,6 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useInvoiceStore } from "./stores/dataStore";
-import axios from "axios";
 import type {
 	Cases,
 	InvoiceWithHistoryObject,
@@ -8,6 +7,7 @@ import type {
 	User,
 } from "../types/Invoice";
 import type { Connection, Schema } from "jsforce";
+import apiClient from "../services/apiClient";
 
 const useConnection = () => {
 	const {
@@ -19,19 +19,22 @@ const useConnection = () => {
 		setConnection,
 		setInvoice,
 	} = useInvoiceStore();
+	const [notFound, setNotFound] = useState(false);
 
 	const getData = async (nf: string, serie: string) => {
 		try {
 			setIsLoading(true);
-			const { data } = await axios.get<InvoiceWithHistoryObject[]>(
-				"http://localhost:3000/clientNf",
+			const { data } = await apiClient.get<InvoiceWithHistoryObject[]>(
+				"/clientNf",
 				{ params: { nf, serie } },
 			);
-			if (data) {
+			if (data && data.length > 0) {
 				setIsLoading(false);
 				setInvoice(data);
 				userData(data[0].AccountLookup__c);
 				NfProductsData(data[0].Id);
+			} else {
+				setNotFound(true);
 			}
 		} catch (error) {
 			console.log(error);
@@ -41,7 +44,7 @@ const useConnection = () => {
 
 	const userData = async (id: string) => {
 		try {
-			const { data } = await axios.get<User[]>("http://localhost:3000/user", {
+			const { data } = await apiClient.get<User[]>("/user", {
 				params: { id },
 			});
 			if (data) {
@@ -54,12 +57,9 @@ const useConnection = () => {
 
 	const NfProductsData = async (id: string) => {
 		try {
-			const { data } = await axios.get<NfProducts[]>(
-				"http://localhost:3000/nfproducts",
-				{
-					params: { id },
-				},
-			);
+			const { data } = await apiClient.get<NfProducts[]>("/nfproducts", {
+				params: { id },
+			});
 			if (data) {
 				setNfPRoducts(data);
 			}
@@ -70,7 +70,7 @@ const useConnection = () => {
 
 	const Cases = async (id: string) => {
 		try {
-			const { data } = await axios.get<Cases[]>("http://localhost:3000/cases", {
+			const { data } = await apiClient.get<Cases[]>("/cases", {
 				params: { id },
 			});
 			if (data) {
@@ -85,11 +85,10 @@ const useConnection = () => {
 		if (invoice.length === 0) {
 			const fetchData = async () => {
 				try {
-					const { data } = await axios.get<Connection<Schema>>(
-						"http://localhost:3000/",
-					);
+					const { data } = await apiClient.get<Connection<Schema>>("/");
 					if (data) {
 						setConnection(data);
+						console.log("Connected to Salesforce");
 					}
 				} catch (error) {
 					console.log(error);
@@ -99,7 +98,7 @@ const useConnection = () => {
 		}
 	}, [invoice.length, setConnection]);
 
-	return { getData, Cases };
+	return { getData, Cases, notFound };
 };
 
 export { useConnection };
