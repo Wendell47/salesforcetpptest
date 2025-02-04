@@ -1,17 +1,17 @@
-import { use, useEffect } from "react";
-import {
-	conn,
-	getCases,
-	getDataByNF,
-	getNfProducts,
-	getUser,
-} from "../services/apiServices";
+import { useEffect } from "react";
 import { useInvoiceStore } from "./stores/dataStore";
+import axios from "axios";
+import type {
+	Cases,
+	InvoiceWithHistoryObject,
+	NfProducts,
+	User,
+} from "../types/Invoice";
+import type { Connection, Schema } from "jsforce";
 
 const useConnection = () => {
 	const {
 		invoice,
-		connection,
 		setUser,
 		setIsLoading,
 		setCases,
@@ -23,7 +23,10 @@ const useConnection = () => {
 	const getData = async (nf: string, serie: string) => {
 		try {
 			setIsLoading(true);
-			const data = await getDataByNF({ connection, nf, serie });
+			const { data } = await axios.get<InvoiceWithHistoryObject[]>(
+				"http://localhost:3000/clientNf",
+				{ params: { nf, serie } },
+			);
 			if (data) {
 				setIsLoading(false);
 				setInvoice(data);
@@ -38,7 +41,9 @@ const useConnection = () => {
 
 	const userData = async (id: string) => {
 		try {
-			const data = await getUser({ connection, id });
+			const { data } = await axios.get<User[]>("http://localhost:3000/user", {
+				params: { id },
+			});
 			if (data) {
 				setUser(data);
 			}
@@ -49,7 +54,12 @@ const useConnection = () => {
 
 	const NfProductsData = async (id: string) => {
 		try {
-			const data = await getNfProducts({ connection, id });
+			const { data } = await axios.get<NfProducts[]>(
+				"http://localhost:3000/nfproducts",
+				{
+					params: { id },
+				},
+			);
 			if (data) {
 				setNfPRoducts(data);
 			}
@@ -60,7 +70,9 @@ const useConnection = () => {
 
 	const Cases = async (id: string) => {
 		try {
-			const data = await getCases({ connection, id });
+			const { data } = await axios.get<Cases[]>("http://localhost:3000/cases", {
+				params: { id },
+			});
 			if (data) {
 				setCases(data);
 			}
@@ -71,17 +83,22 @@ const useConnection = () => {
 
 	useEffect(() => {
 		if (invoice.length === 0) {
-			conn()
-				.then((connection) => {
-					if (connection) {
-						setConnection(connection);
+			const fetchData = async () => {
+				try {
+					const { data } = await axios.get<Connection<Schema>>(
+						"http://localhost:3000/",
+					);
+					if (data) {
+						setConnection(data);
 					}
-				})
-				.catch((error) => {
+				} catch (error) {
 					console.log(error);
-				});
+				}
+			};
+			fetchData();
 		}
 	}, [invoice.length, setConnection]);
+
 	return { getData, Cases };
 };
 

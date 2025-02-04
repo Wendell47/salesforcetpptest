@@ -5,12 +5,12 @@ import { useConnection } from "@/app/hooks/useConnection";
 import { useEffect } from "react";
 
 export default function Cases() {
-	const { invoice, cases } = useInvoiceStore();
+	const { cases } = useInvoiceStore();
 	const { Cases } = useConnection();
 
 	useEffect(() => {
 		Cases("00GHY000000NGti2AG");
-	}, [Cases]);
+	}, []);
 	return (
 		<div>
 			{cases.map((record) => (
