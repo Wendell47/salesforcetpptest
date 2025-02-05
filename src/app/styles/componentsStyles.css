@@ -1,0 +1,6 @@
+.custom-th {
+	@apply text-gray-900 text-xs font-medium uppercase tracking-wider;
+}
+.custom-td {
+	@apply px-6 py-4 whitespace-nowrap;
+}

@@ -13,6 +13,7 @@ const useConnection = () => {
 	const {
 		invoice,
 		setUser,
+		connection,
 		setIsLoading,
 		setCases,
 		setNfPRoducts,
@@ -26,7 +27,9 @@ const useConnection = () => {
 			setIsLoading(true);
 			const { data } = await apiClient.get<InvoiceWithHistoryObject[]>(
 				"/clientNf",
-				{ params: { nf, serie } },
+				{
+					params: { nf, serie },
+				},
 			);
 			if (data && data.length > 0) {
 				setIsLoading(false);
@@ -82,13 +85,13 @@ const useConnection = () => {
 	};
 
 	useEffect(() => {
-		if (invoice.length === 0) {
+		if (invoice.length === 0 && connection === null) {
 			const fetchData = async () => {
 				try {
 					const { data } = await apiClient.get<Connection<Schema>>("/");
 					if (data) {
 						setConnection(data);
-						console.log("Connected to Salesforce");
+						console.log(data._baseUrl);
 					}
 				} catch (error) {
 					console.log(error);
@@ -96,7 +99,7 @@ const useConnection = () => {
 			};
 			fetchData();
 		}
-	}, [invoice.length, setConnection]);
+	}, [invoice.length, connection, setConnection]);
 
 	return { getData, Cases, notFound };
 };
