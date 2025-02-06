@@ -46,7 +46,11 @@ export default function RCForm() {
 	console.log(invoice[0]);
 	return (
 		<div className="flex gap-4 items-start">
-			<Button btnType="secondary" onClick={() => router.push("/")}>
+			<Button
+				btnType="secondary"
+				className="print:hidden"
+				onClick={() => router.push("/")}
+			>
 				<ArrowLeft />
 			</Button>
 			{invoice.length > 0 ? (
