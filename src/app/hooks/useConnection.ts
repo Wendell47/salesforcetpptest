@@ -1,18 +1,19 @@
-import { use, useEffect,useState } from "react";
-import {
-	conn,
-	getCases,
-	getDataByNF,
-	getNfProducts,
-	getUser,
-} from "../services/apiServices";
+import { useEffect, useState } from "react";
 import { useInvoiceStore } from "./stores/dataStore";
+import type {
+	Cases,
+	InvoiceWithHistoryObject,
+	NfProducts,
+	User,
+} from "../types/Invoice";
+import type { Connection, Schema } from "jsforce";
+import apiClient from "../services/apiClient";
 
 const useConnection = () => {
 	const {
 		invoice,
-		connection,
 		setUser,
+		connection,
 		setIsLoading,
 		setCases,
 		setNfPRoducts,
@@ -20,15 +21,21 @@ const useConnection = () => {
 		setInvoice,
 	} = useInvoiceStore();
 	const [notFound, setNotFound] = useState(false);
+
 	const getData = async (nf: string, serie: string) => {
 		try {
 			setIsLoading(true);
-			const data = await getDataByNF({ connection, nf, serie });
+			const { data } = await apiClient.get<InvoiceWithHistoryObject[]>(
+				"/clientNf",
+				{
+					params: { nf, serie },
+				},
+			);
 			if (data && data.length > 0) {
 				setInvoice(data);
 				userData(data[0].AccountLookup__c);
 				NfProductsData(data[0].Id);
-			}else{
+			} else {
 				setNotFound(true);
 			}
 			setIsLoading(false);
@@ -40,7 +47,9 @@ const useConnection = () => {
 
 	const userData = async (id: string) => {
 		try {
-			const data = await getUser({ connection, id });
+			const { data } = await apiClient.get<User[]>("/user", {
+				params: { id },
+			});
 			if (data) {
 				setUser(data);
 			}
@@ -51,7 +60,9 @@ const useConnection = () => {
 
 	const NfProductsData = async (id: string) => {
 		try {
-			const data = await getNfProducts({ connection, id });
+			const { data } = await apiClient.get<NfProducts[]>("/nfproducts", {
+				params: { id },
+			});
 			if (data) {
 				setNfPRoducts(data);
 			}
@@ -62,7 +73,9 @@ const useConnection = () => {
 
 	const Cases = async (id: string) => {
 		try {
-			const data = await getCases({ connection, id });
+			const { data } = await apiClient.get<Cases[]>("/cases", {
+				params: { id },
+			});
 			if (data) {
 				setCases(data);
 			}
@@ -72,19 +85,23 @@ const useConnection = () => {
 	};
 
 	useEffect(() => {
-		if (invoice.length === 0) {
-			conn()
-				.then((connection) => {
-					if (connection) {
-						setConnection(connection);
+		if (invoice.length === 0 && connection === null) {
+			const fetchData = async () => {
+				try {
+					const { data } = await apiClient.get<Connection<Schema>>("/");
+					if (data) {
+						setConnection(data);
+						console.log(data._baseUrl);
 					}
-				})
-				.catch((error) => {
+				} catch (error) {
 					console.log(error);
-				});
+				}
+			};
+			fetchData();
 		}
-	}, [invoice.length, setConnection]);
-	return { getData, Cases,notFound };
+	}, [invoice.length, connection, setConnection]);
+
+	return { getData, Cases, notFound };
 };
 
 export { useConnection };

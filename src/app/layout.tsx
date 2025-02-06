@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
+import { Sarabun } from "next/font/google";
+
 import localFont from "next/font/local";
 import "./globals.css";
 
+const sarabun = Sarabun({
+	subsets: ["latin"],
+	weight: ["400", "700"],
+	display: "swap",
+});
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
 	variable: "--font-geist-sans",
@@ -25,9 +32,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="pt-br">
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased print:p-0`}
-			>
+			<body className={`${sarabun.className} antialiased print:p-0`}>
 				{children}
 			</body>
 		</html>

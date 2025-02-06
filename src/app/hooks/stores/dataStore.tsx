@@ -1,6 +1,5 @@
 import type {
 	Cases,
-	Invoice,
 	InvoiceWithHistoryObject,
 	NfProducts,
 	User,
