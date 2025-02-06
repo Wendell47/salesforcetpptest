@@ -15,6 +15,7 @@ export default function Button({
 	children,
 	btnType = "primary",
 	isLoading = false,
+	className,
 	...rest
 }: Props) {
 	const Link = (
@@ -25,7 +26,7 @@ export default function Button({
 	return (
 		<button
 			type="button"
-			className={`p-3 rounded-lg  text-white font-bold flex-1 flex items-center gap-2 justify-center  ${btnType === "primary" && "bg-blue-600 disabled:bg-neutral-400 dark:disabled:bg-neutral-500 hover:bg-blue-700"}  ${btnType === "secondary" && "border dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-900/60"} ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
+			className={`p-3 rounded-lg  text-white font-bold flex-1 flex items-center gap-2 justify-center  ${btnType === "primary" && "bg-blue-600 disabled:bg-neutral-400 dark:disabled:bg-neutral-500 hover:bg-blue-700"}  ${btnType === "secondary" && "border dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-900/60"} ${isLoading ? "cursor-not-allowed" : "cursor-pointer"} ${className}`}
 			{...rest}
 		>
 			{children}
