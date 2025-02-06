@@ -1,8 +1,8 @@
 "use client";
-import Item from "@/app/components/Item";
 import Table from "@/app/components/table";
 import { useInvoiceStore } from "@/app/hooks/stores/dataStore";
 import { useConnection } from "@/app/hooks/useConnection";
+import titles from "@/app/utils/table";
 import { useEffect } from "react";
 
 export default function Cases() {
@@ -13,14 +13,6 @@ export default function Cases() {
 		Cases("00GHY000000NGti2AG");
 	}, []);
 
-	const titles = {
-		ClientName__c: "Nome",
-		CLI__c: "CLI",
-		Divisao__c: "Divisão",
-		Serie_Nf__c: "Série",
-		CaseNumber: "Caso",
-		CreatedDate: "Data de Criação",
-	};
 	return (
 		<Table>
 			<Table.Thead>
@@ -31,11 +23,12 @@ export default function Cases() {
 					<Table.Th title={titles.Serie_Nf__c} />
 					<Table.Th title={titles.CaseNumber} />
 					<Table.Th title={titles.CreatedDate} />
+					<Table.Th title={titles.Description} />
 				</tr>
 			</Table.Thead>
 			<Table.Tbody>
 				{cases.map((record) => (
-					<tr key={record.Id}>
+					<tr key={record.Id} className="hover:bg-sky-950 transition">
 						<Table.Th title={record.ClientName__c} />
 						<Table.Th title={record.CLI__c} />
 						<Table.Th title={record.Divisao__c} />
@@ -44,6 +37,7 @@ export default function Cases() {
 						<Table.Th
 							title={new Date(record.CreatedDate).toLocaleDateString("pt-BR")}
 						/>
+						<Table.Th title={record.Description} />
 					</tr>
 				))}
 			</Table.Tbody>

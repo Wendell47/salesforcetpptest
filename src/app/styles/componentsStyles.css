@@ -1,6 +1,6 @@
-.custom-th {
-	@apply text-gray-900 text-xs font-medium uppercase tracking-wider;
+.custom-thead {
+	@apply [&_th]:px-6 text-neutral-400 text-xs  leading-7 font-medium uppercase tracking-wider px-2;
 }
-.custom-td {
-	@apply px-6 py-4 whitespace-nowrap;
+.custom-tbody {
+	@apply [&_th]:px-6  py-4 whitespace-nowrap leading-7 even:divide-y even:divide-neutral-700;
 }

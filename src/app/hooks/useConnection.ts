@@ -32,13 +32,13 @@ const useConnection = () => {
 				},
 			);
 			if (data && data.length > 0) {
-				setIsLoading(false);
 				setInvoice(data);
 				userData(data[0].AccountLookup__c);
 				NfProductsData(data[0].Id);
 			} else {
 				setNotFound(true);
 			}
+			setIsLoading(false);
 		} catch (error) {
 			console.log(error);
 			setIsLoading(false);

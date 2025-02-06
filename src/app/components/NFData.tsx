@@ -3,15 +3,15 @@ import { useInvoiceStore } from "../hooks/stores/dataStore";
 import Block from "./block";
 import Item from "./Item";
 import { NotepadText } from "lucide-react";
+import Button from "./button";
 
 export default function NFData() {
-    const router = useRouter();
-    const { invoice, NfProducts, user } = useInvoiceStore();
+	const router = useRouter();
+	const { invoice, NfProducts, user } = useInvoiceStore();
 
-  return (
-   <>
-  
-   <Block className="mt-4">
+	return (
+		<>
+			<Block>
 				{invoice.length > 0 ? (
 					<ul>
 						{invoice.map((record) => (
@@ -41,7 +41,7 @@ export default function NFData() {
 					<p>Carregando...</p>
 				)}
 			</Block>
-			<Block >
+			<Block>
 				{user.length > 0 ? (
 					<ul className="flex gap-2 flex-wrap">
 						{user.map((u) => (
@@ -84,17 +84,17 @@ export default function NFData() {
 					<p>Carregando...</p>
 				)}
 			</Block>
-            {invoice.length > 0 && (
+			{invoice.length > 0 && (
 				<div>
-					<button
+					<Button
+						title="Gerar Formulário"
 						type="button"
-						className="flex gap-2 p-3 rounded-lg bg-blue-600 text-blue-100 font-bold flex-1"
 						onClick={() => router.push("/RCForm")}
 					>
-						<NotepadText /> Gerar formulario
-					</button>
+						<NotepadText />
+					</Button>
 				</div>
 			)}
-   </>
-  );
+		</>
+	);
 }

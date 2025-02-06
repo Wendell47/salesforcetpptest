@@ -16,16 +16,18 @@ const Td = ({ content }: { content: string }) => {
 	);
 };
 function Thead({ children }: Props) {
-	return <thead className="bg-neutral-800 [&_th]:custom-th">{children}</thead>;
+	return <thead className="bg-neutral-900 custom-thead">{children}</thead>;
 }
 function Tbody({ children }: Props) {
-	return <tbody className="[&_td]:custom-td">{children}</tbody>;
+	return <tbody className="custom-tbody  ">{children}</tbody>;
 }
 
 function Table({ children }: Props) {
 	return (
-		<div className="overflow-hidden rounded-lg bg-neutral-600">
-			<table className="min-w-full divide-y divide-gray-200">{children}</table>
+		<div className="overflow-hidden rounded-lg bg-neutral-800 max-w-5xl w-full border border-neutral-700">
+			<table className="min-w-full divide-y divide-neutral-700 text-left">
+				{children}
+			</table>
 		</div>
 	);
 }

@@ -2,24 +2,31 @@
 import { useInvoiceStore } from "@/app/hooks/stores/dataStore";
 import { ChevronDown, PenLine } from "lucide-react";
 import Image from "next/image";
-import { use, useState } from "react";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useState } from "react";
 
 export default function RCForm() {
-	const { invoice, user,NfProducts} = useInvoiceStore();
+	const { invoice, user, NfProducts } = useInvoiceStore();
 	const [Text, setText] = useState("");
 	const [textHeight, setHeight] = useState(28);
 	const [hide, setHide] = useState(false);
 	const [hideOptions, setHideOptions] = useState(false);
-	const[index,setIndex]=useState(0);
+	const [index, setIndex] = useState(0);
 
 	function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
 		setText(e.target.value);
 		setHeight(e.target.scrollHeight);
 	}
-	function handleOptions(e:number){
-		setIndex(e)
-		setHideOptions(!hideOptions)	                                                     
+	function handleOptions(e: number) {
+		setIndex(e);
+		setHideOptions(!hideOptions);
 	}
+	const router = useRouter();
+
+	useEffect(() => {
+		invoice.length === 0 && router.push("/");
+	}, [invoice.length, router]);
+
 	console.log(invoice[0]);
 	return invoice.length > 0 ? (
 		invoice.map((data) => (
@@ -43,7 +50,9 @@ export default function RCForm() {
 							Prioridade!
 						</h1>
 						<div className="flex items-end mb-5" onFocus={() => setHide(true)}>
-							<label htmlFor="description" className="!hidden">description</label>
+							<label htmlFor="description" className="!hidden">
+								description
+							</label>
 							<textarea
 								id="description"
 								className="text-center w-full text-lg font-bold  bg-transparent resize-none"
@@ -58,16 +67,15 @@ export default function RCForm() {
 							<div className="flex-1 basis-[20%] border-r  p-2">
 								<h3>
 									<span className="opacity-65">NF:</span>{" "}
-									{data.NinePositionsDocumentNumber__c} - 104
+									{data.NinePositionsDocumentNumber__c} - {data.Serie__c}
 								</h3>
 							</div>
 							<div className="flex-[1] basis-[60%]  p-2">
 								<p>
-									<span className="opacity-65">CLIENTE:</span> {user[0].ExternalId__c} - {data.NameOne__c}
+									<span className="opacity-65">CLIENTE:</span>{" "}
+									{user[0].ExternalId__c} - {data.NameOne__c}
 								</p>
 							</div>
-
-							
 						</div>
 
 						<div className="flex flex-wrap border">
@@ -76,22 +84,48 @@ export default function RCForm() {
 									Endereço do Cliente
 								</h1>
 							</div>
-							
+
 							<div className="flex-1 basis-1/3 border-r  p-2">
-								<label className="opacity-65"  htmlFor="BairroEntrega__c">Bairro</label>
-								<input id="BairroEntrega__c" defaultValue={data.BairroEntrega__c} />
+								<label className="opacity-65" htmlFor="BairroEntrega__c">
+									Bairro
+								</label>
+								<input
+									id="BairroEntrega__c"
+									defaultValue={data.BairroEntrega__c}
+								/>
 							</div>
 							<div className="flex-1 basis-1/3 border-r   p-2">
-								<label className="opacity-65" htmlFor="CepEntrega__c">CEP</label>
+								<label className="opacity-65" htmlFor="CepEntrega__c">
+									CEP
+								</label>
 								<input id="CepEntrega__c" defaultValue={data.CepEntrega__c} />
 							</div>
 							<div className="flex-1 basis-1/3   p-2">
-								<label className="opacity-65"  htmlFor="CidadeEstadoEntrega__c">Cidade/Estado</label>
-								<input id="CidadeEstadoEntrega__c" defaultValue={data.CidadeEstadoEntrega__c} />
+								<label className="opacity-65" htmlFor="CidadeEstadoEntrega__c">
+									Cidade/Estado
+								</label>
+								<input
+									id="CidadeEstadoEntrega__c"
+									defaultValue={data.CidadeEstadoEntrega__c}
+								/>
 							</div>
 							<div className="flex-1 basis-full  border-t p-2">
-								<label className="opacity-65"  htmlFor="EnderecoEntrega__c">Endereço de Entrega</label>
-								<input id="EnderecoEntrega__c" defaultValue={data.EnderecoEntrega__c} />
+								<label className="opacity-65" htmlFor="EnderecoEntrega__c">
+									Endereço de Entrega
+								</label>
+								<input
+									id="EnderecoEntrega__c"
+									defaultValue={data.EnderecoEntrega__c}
+								/>
+							</div>
+							<div className="flex-1 basis-full  border-t p-2">
+								<label className="opacity-65" htmlFor="EnderecoEntrega__c">
+									Referência
+								</label>
+								<input
+									id="EnderecoEntrega__c"
+									defaultValue={data.Referencia__c}
+								/>
 							</div>
 						</div>
 
@@ -110,8 +144,13 @@ export default function RCForm() {
 						</div>
 						<div className="flex flex-wrap border relative">
 							<div className="!basis-full  border-b p-2 flex justify-center">
-								<button className="font-bold uppercase flex gap-1" onClick={()=>setHideOptions(false)}>Produto <ChevronDown /></button>
-								
+								<button
+									type="button"
+									className="font-bold uppercase flex gap-1"
+									onClick={() => setHideOptions(false)}
+								>
+									Produto <ChevronDown />
+								</button>
 							</div>
 							<div className="flex-1 basis-1/1   p-2">
 								<span className="opacity-65">Código</span>
@@ -120,25 +159,38 @@ export default function RCForm() {
 							<div className="flex-1 basis-1/2 border-l   p-2">
 								<span className="opacity-65">Item</span>
 								<p>{NfProducts[index].Name}</p>
-							
 							</div>
 							<div className="flex-1 basis-1/1 border-l   p-2">
 								<span className="opacity-65">Quantidade</span>
 								<p>{NfProducts[index].Amount__c}</p>
-							
 							</div>
 
-							<div className={`absolute  inset-x-0 rounded-lg border border-neutral-200 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-700 mt-12 mx-2 flex flex-col overflow-hidden ${hideOptions ? "hidden" : "show"}`}>{
-								NfProducts.map((product, index)=>(
-									<button key={product.Id} className={`text-left p-2  hover:bg-neutral-200 dark:hover:bg-neutral-500	focus:bg-neutral-500 focus:outline-none`}onClick={()=>handleOptions(index)}>{product.MaterialNumber__c} - {product.Name}</button>
-								))
-								}</div>
+							<div
+								className={`absolute  inset-x-0 rounded-lg border border-neutral-200 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-700 mt-12 mx-2 flex flex-col overflow-hidden ${hideOptions ? "hidden" : "show"}`}
+							>
+								{NfProducts.map((product, index) => (
+									<button
+										key={product.Id}
+										type="button"
+										className="text-left p-2  hover:bg-neutral-200 dark:hover:bg-neutral-500	focus:bg-neutral-500 focus:outline-none"
+										onClick={() => handleOptions(index)}
+									>
+										{product.MaterialNumber__c} - {product.Name}
+									</button>
+								))}
+							</div>
 						</div>
 					</section>
 					<section className="w-full ">
 						<div className="flex-1 pb-8 border-b ">
-						<label className="opacity-65 !hidden"  htmlFor="Signature">Endereço de Entrega</label>
-							<input id="Signature" className="text-center mb-5 w-full" defaultValue={"AOS CUIDADOS DO GUILHERME TRINDADE"}/>
+							<label className="opacity-65 !hidden" htmlFor="Signature">
+								Endereço de Entrega
+							</label>
+							<input
+								id="Signature"
+								className="text-center mb-5 w-full"
+								defaultValue={"AOS CUIDADOS DO GUILHERME TRINDADE"}
+							/>
 							<p className="text-center text-neutral-400">Assinatura:</p>
 						</div>
 					</section>
