@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/app/components/button";
 import { useInvoiceStore } from "@/app/hooks/stores/dataStore";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { ArrowLeft, ArrowRight, ChevronDown, PenLine } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -23,27 +24,12 @@ export default function RCForm() {
 		setHideOptions(!hideOptions);
 	}
 	const router = useRouter();
-	const [signature, setSignature] = useState<string>(
-		"AOS CUIDADOS DO GUILHERME TRINDADE",
-	);
-	useEffect(() => {
-		// Carregar o valor do localStorage quando a página for carregada
-		const savedSignature = localStorage.getItem("signature");
-		if (savedSignature) {
-			setSignature(savedSignature);
-		}
-	}, []);
-
-	useEffect(() => {
-		// Salvar o valor no localStorage sempre que ele for alterado
-		localStorage.setItem("signature", signature);
-	}, [signature]);
+	const { storage, setStorage } = useLocalStorage("signature");
 
 	useEffect(() => {
 		invoice.length === 0 && router.push("/");
 	}, [invoice.length, router]);
 
-	console.log(invoice[0]);
 	return (
 		<div className="flex gap-4 items-start">
 			<Button
@@ -223,8 +209,10 @@ export default function RCForm() {
 									<input
 										id="Signature"
 										className="text-center mb-5 w-full"
-										defaultValue={signature}
-										onChange={(e) => setSignature(e.target.value)}
+										defaultValue={
+											storage ?? "AOS CUIDADOS DE GUILHERME TRINDADE"
+										}
+										onChange={(e) => setStorage(e.target.value)}
 									/>
 									<p className="text-center text-neutral-400">Assinatura:</p>
 								</div>
