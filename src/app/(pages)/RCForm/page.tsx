@@ -74,7 +74,6 @@ export default function RCForm() {
 										style={{ height: textHeight }}
 										onChange={(e) => handleChange(e)}
 									/>
-									<PenLine style={{ opacity: hide ? 0 : 1 }} />
 								</div>
 
 								<div className="flex flex-wrap border">
@@ -167,7 +166,7 @@ export default function RCForm() {
 										<button
 											type="button"
 											className="font-bold uppercase flex gap-1"
-											onClick={() => setHideOptions(false)}
+											onClick={() => setHideOptions(!hideOptions)}
 										>
 											Produto <ChevronDown />
 										</button>
