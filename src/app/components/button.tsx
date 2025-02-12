@@ -26,7 +26,7 @@ export default function Button({
 	return (
 		<button
 			type="button"
-			className={`p-3 rounded-lg  dark:text-white font-bold flex-1 flex items-center gap-2 justify-center border  ${btnType === "primary" && "bg-blue-600 disabled:bg-neutral-400 disabled:border-neutral-500/20 dark:disabled:bg-neutral-500 dark:disabled:border-neutral-400/50 disabled:shadow-none border-blue-500/40 shadow-lg shadow-blue-600/40 hover:bg-blue-700 hover:border-blue-600/50"}  ${btnType === "secondary" && "bg-white text-black dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-900/60"} ${isLoading ? "cursor-not-allowed" : "cursor-pointer"} ${className}`}
+			className={`p-3 rounded-lg  dark:text-white font-bold flex-1 flex items-center gap-2 justify-center border  ${btnType === "primary" && "bg-blue-600 text-white disabled:bg-neutral-400 disabled:border-neutral-500/20 dark:disabled:bg-neutral-500 dark:disabled:border-neutral-400/50 disabled:shadow-none border-blue-500/40 shadow-lg shadow-blue-600/40 hover:bg-blue-700 hover:border-blue-600/50"}  ${btnType === "secondary" && "bg-white text-black dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-900/60"} ${isLoading ? "cursor-not-allowed" : "cursor-pointer"} ${className}`}
 			{...rest}
 		>
 			{children}

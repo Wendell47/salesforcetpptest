@@ -43,7 +43,7 @@ export default function NFData() {
 			</Block>
 			<Block>
 				{user.length > 0 ? (
-					<ul className="flex gap-2 flex-wrap">
+					<ul className="flex gap-2 flex-wrap" key={user[0].Id}>
 						{user.map((u) => (
 							<li key={u.Id} className="flex gap-5 flex-wrap">
 								<Item title="Contato Principal" dataInfo={u.DDDPhone__c} />
@@ -84,7 +84,7 @@ export default function NFData() {
 					<p>Carregando...</p>
 				)}
 			</Block>
-			{invoice.length > 0 && (
+			{NfProducts.length > 0 && user.length > 0 && (
 				<div>
 					<Button
 						title="Gerar Formulário"
