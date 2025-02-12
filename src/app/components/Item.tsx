@@ -11,7 +11,7 @@ export default function Item({ title, dataInfo, className }: Props) {
 			<span className="text-sm text-neutral-400 dark:text-neutral-500  text-medium">
 				{title}
 			</span>
-			<div className="bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 p-3 rounded-lg">
+			<div className="bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700/30 p-3 rounded-lg">
 				{dataInfo}
 			</div>
 		</div>

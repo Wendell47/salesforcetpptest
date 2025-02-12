@@ -44,7 +44,7 @@ export default function RCForm() {
 					<div
 						key={data.Id}
 						id="RCForm"
-						className="p-10 w-[210mm] h-[297mm] rounded-md border border-solid bg-white border-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 print:border-transparent"
+						className="p-10 w-[210mm] h-[297mm] rounded-md border  bg-white  dark:border-neutral-800 dark:bg-neutral-900 print:border-transparent"
 					>
 						<div className="flex flex-col items-center gap-2 h-full">
 							<section className="flex flex-1 p-3 flex-col gap-3 ">

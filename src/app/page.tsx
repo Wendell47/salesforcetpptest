@@ -8,7 +8,7 @@ import Button from "./components/button";
 import NFData from "./components/NFData";
 import Image from "next/image";
 import { useInvoiceStore } from "./hooks/stores/dataStore";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, Search } from "lucide-react";
 
 export default function Home() {
 	const [nf, setNf] = useState<string>("");
