@@ -7,10 +7,10 @@ import { useEffect } from "react";
 
 export default function Cases() {
 	const { cases } = useInvoiceStore();
-	const { Cases } = useConnection();
+	const { getCases } = useConnection();
 
 	useEffect(() => {
-		Cases("00GHY000000NGti2AG");
+		getCases("00GHY000000NGti2AG");
 	}, []);
 
 	return (

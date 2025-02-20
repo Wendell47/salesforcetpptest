@@ -49,8 +49,9 @@ const useConnection = () => {
 		}
 	};
 
-	const Cases = () =>
+	const getCases = (id: string) =>
 		fetchData({
+			params: { id: id },
 			url: "/cases",
 			setData: setCases,
 		});
@@ -64,7 +65,7 @@ const useConnection = () => {
 		}
 	}, [invoice.length, connection, setConnection]);
 
-	return { getData, Cases, notFound };
+	return { getData, getCases, notFound };
 };
 
 export { useConnection };
