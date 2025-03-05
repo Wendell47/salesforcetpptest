@@ -7,12 +7,12 @@ import { useEffect } from "react";
 
 export default function Cases() {
 	const { cases } = useInvoiceStore();
-	const { Cases } = useConnection();
+	const { getCases } = useConnection();
 
-	useEffect(() => {
-		Cases("00GHY000000NGti2AG");
-	}, []);
-
+	
+	const {data} = await getCases("00GHY000000NGti2AG");
+	
+	
 	return (
 		<Table>
 			<Table.Thead>

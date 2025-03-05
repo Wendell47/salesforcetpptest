@@ -4,45 +4,76 @@ import Block from "./block";
 import Item from "./Item";
 import { NotepadText } from "lucide-react";
 import Button from "./button";
+import { useConnection } from "../hooks/useConnection";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type {
+	InvoiceWithHistoryObject,
+	NfProducts,
+	setSearchParamsProps,
+	User,
+} from "../types/Invoice";
 
-export default function NFData() {
+type NFDataProps = {
+	nfData: {
+		invoice: UseQueryResult<InvoiceWithHistoryObject[], Error>;
+		userData: UseQueryResult<User[], Error>;
+		userProductsData: UseQueryResult<NfProducts[], Error>;
+		searchParams: setSearchParamsProps;
+	};
+};
+export default function NFData({ nfData }: NFDataProps) {
 	const router = useRouter();
-	const { invoice, NfProducts, user } = useInvoiceStore();
 
+	const { data: invoice, isLoading, isFetching } = nfData.invoice;
+	const { data: user, isFetched: userFetched } = nfData.userData;
+	const {
+		data: NfProducts,
+		isFetched: NfProductsFetched,
+		status,
+	} = nfData.userProductsData;
+	const { nf, serie } = nfData.searchParams;
+
+	const invoiceData = invoice?.[0];
+	const userData = user?.[0];
+	const userProductsData = NfProducts?.[0];
+
+	console.log(user, invoice);
 	return (
 		<>
 			<Block>
-				{invoice.length > 0 ? (
+				{isFetching ? (
 					<ul>
-						{invoice.map((record) => (
-							<li key={record.Id} className="flex gap-2 flex-wrap">
-								<div className="flex gap-2 flex-wrap">
-									<Item
-										title="NotaFiscal"
-										dataInfo={record.NinePositionsDocumentNumber__c}
-									/>
-									<Item title="Nome" dataInfo={record.NameOne__c} />
-									<Item
-										title="Endereço de Entrega"
-										dataInfo={record.EnderecoEntrega__c}
-									/>
-									<Item title="Bairro" dataInfo={record.BairroEntrega__c} />
-									<Item
-										title="Cidade/Estado"
-										dataInfo={record.CidadeEstadoEntrega__c}
-									/>
-									<Item title="CEP" dataInfo={record.CepEntrega__c} />
-									<Item title="Referência" dataInfo={record.Referencia__c} />
-								</div>
-							</li>
-						))}
+						<li key={invoiceData?.Id} className="flex gap-2 flex-wrap">
+							<div className="flex gap-2 flex-wrap">
+								<Item
+									title="NotaFiscal"
+									dataInfo={invoiceData?.NinePositionsDocumentNumber__c}
+									isLoading={isLoading}
+								/>
+								<Item title="Nome" dataInfo={invoiceData?.NameOne__c} />
+								<Item
+									title="Endereço de Entrega"
+									dataInfo={invoiceData?.EnderecoEntrega__c}
+								/>
+								<Item title="Bairro" dataInfo={invoiceData?.BairroEntrega__c} />
+								<Item
+									title="Cidade/Estado"
+									dataInfo={invoiceData?.CidadeEstadoEntrega__c}
+								/>
+								<Item title="CEP" dataInfo={invoiceData?.CepEntrega__c} />
+								<Item
+									title="Referência"
+									dataInfo={invoiceData?.Referencia__c}
+								/>
+							</div>
+						</li>
 					</ul>
 				) : (
 					<p>Carregando...</p>
 				)}
 			</Block>
 			<Block>
-				{user.length > 0 ? (
+				{user ? (
 					<ul className="flex gap-2 flex-wrap" key={user[0].Id}>
 						{user.map((u) => (
 							<li key={u.Id} className="flex gap-5 flex-wrap">
@@ -52,17 +83,21 @@ export default function NFData() {
 						))}
 					</ul>
 				) : (
-					<p>Carregando...</p>
+					<li className="flex gap-5 flex-wrap">
+						<Item title="Contato Principal" isLoading={isLoading} />
+						<Item title="Contato Secundário" isLoading={isLoading} />
+					</li>
 				)}
 			</Block>
 			<Block>
 				<div className="flex justify-between mb-3">
 					<h4 className="text-xl">Produto</h4>{" "}
 					<p className="text-lg">
-						<span className="text-neutral-500">Itens:</span> {NfProducts.length}
+						<span className="text-neutral-500">Itens:</span>{" "}
+						{NfProducts?.length}
 					</p>
 				</div>
-				{NfProducts.length > 0 ? (
+				{NfProducts ? (
 					<ul className="flex gap-2 flex-wrap">
 						{NfProducts.map((u) => (
 							<li key={u.Id} className="flex gap-5 flex-wrap flex-auto">
@@ -84,12 +119,12 @@ export default function NFData() {
 					<p>Carregando...</p>
 				)}
 			</Block>
-			{NfProducts.length > 0 && user.length > 0 && (
+			{userFetched && NfProductsFetched && (
 				<div>
 					<Button
 						title="Gerar Formulário"
 						type="button"
-						onClick={() => router.push("/RCForm")}
+						onClick={() => router.push(`RCForm?nf=${nf}&serie=${serie}`)}
 					>
 						<NotepadText />
 					</Button>

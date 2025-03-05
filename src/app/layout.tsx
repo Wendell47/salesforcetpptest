@@ -1,23 +1,15 @@
+
 import type { Metadata } from "next";
 import { Sarabun } from "next/font/google";
 
-import localFont from "next/font/local";
 import "./globals.css";
+
+import Provider from "./services/provider";
 
 const sarabun = Sarabun({
 	subsets: ["latin"],
 	weight: ["400", "700"],
 	display: "swap",
-});
-const geistSans = localFont({
-	src: "./fonts/GeistVF.woff",
-	variable: "--font-geist-sans",
-	weight: "100 900",
-});
-const geistMono = localFont({
-	src: "./fonts/GeistMonoVF.woff",
-	variable: "--font-geist-mono",
-	weight: "100 900",
 });
 
 export const metadata: Metadata = {
@@ -32,9 +24,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="pt-br">
-			<body className={`${sarabun.className} antialiased print:p-0`}>
+		<Provider>
+		<body className={`${sarabun.className} antialiased print:p-0`}>
 				{children}
 			</body>
+			</Provider>
 		</html>
 	);
 }

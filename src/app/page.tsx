@@ -7,15 +7,30 @@ import Button from "./components/button";
 
 import NFData from "./components/NFData";
 import Image from "next/image";
-import { useInvoiceStore } from "./hooks/stores/dataStore";
-import { Loader2Icon, Search } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 
 export default function Home() {
 	const [nf, setNf] = useState<string>("");
 	const [serie, setSerie] = useState<string>("104");
-	const { getData, notFound } = useConnection();
+	const {
+		Connection,
+		invoice,
+		searchParams,
+		setSearchParams,
+		userData,
+		userProductsData,
+		notFound,
+	} = useConnection();
+	const { data, isLoading } = invoice;
+	const { isFetching } = Connection;
 
-	const { invoice, connection, isLoading } = useInvoiceStore();
+	const nfData = {
+		userData,
+		userProductsData,
+		invoice,
+		searchParams,
+	};
+	console.log(data);
 	return (
 		<div className="max-w-4xl w-full flex gap-2 flex-col">
 			<Block>
@@ -38,14 +53,14 @@ export default function Home() {
 
 					<Button
 						title="Buscar"
-						onClick={() => getData(nf, serie)}
+						onClick={() => setSearchParams({ nf, serie })}
 						disabled={!(nf && serie)}
 						isLoading={isLoading}
 					/>
 				</form>
 			</Block>
-			{invoice.length > 0 ? (
-				<NFData />
+			{data && data?.length > 0 ? (
+				<NFData nfData={nfData} />
 			) : (
 				<>
 					<Image
@@ -56,7 +71,7 @@ export default function Home() {
 						className="w-full"
 					/>
 
-					{!connection ? (
+					{isFetching ? (
 						<>
 							<h1 className="text-xl text-center">CONECTANDO</h1>
 							<div className="text-center">

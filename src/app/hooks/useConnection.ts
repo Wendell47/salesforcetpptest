@@ -1,70 +1,84 @@
-import { useEffect, useState } from "react";
-import { useInvoiceStore } from "./stores/dataStore";
-import type { Connection, Schema } from "jsforce";
+import { useState } from "react";
+
+import type { Connection } from "jsforce";
 import { fetchData } from "./util/fetchData";
+import type {
+	Cases,
+	InvoiceWithHistoryObject,
+	NfProducts,
+	setSearchParamsProps,
+	User,
+} from "../types/Invoice";
+import { useQuery } from "@tanstack/react-query";
 
 const useConnection = () => {
-	const {
-		invoice,
-		setUser,
-		connection,
-		setIsLoading,
-		setCases,
-		setNfPRoducts,
-		setConnection,
-		setInvoice,
-	} = useInvoiceStore();
 	const [notFound, setNotFound] = useState(false);
+	const [invoiceID, setInvoiceID] = useState("");
+	const [accountLookupID, setAccountLookupID] = useState("");
+	const [searchParams, setSearchParams] = useState<setSearchParamsProps>({});
 
-	const getData = async (nf: string, serie: string) => {
-		try {
-			setIsLoading(true);
-
-			const data = await fetchData({
-				params: { nf: nf, serie: serie },
+	const invoice = useQuery({
+		queryKey: ["invoice", searchParams],
+		queryFn: async () => {
+			const data = await fetchData<InvoiceWithHistoryObject[]>({
 				url: "/clientNf",
-				setData: setInvoice,
+				params: searchParams,
 			});
-
 			if (data && data.length > 0) {
-				await Promise.all([
-					fetchData({
-						params: { id: data[0].AccountLookup__c },
-						url: "/user",
-						setData: setUser,
-					}),
-					fetchData({
-						params: { id: data[0].Id },
-						url: "/nfproducts",
-						setData: setNfPRoducts,
-					}),
-				]);
+				setInvoiceID(data[0].Id);
+				setAccountLookupID(data[0].AccountLookup__c);
 			} else {
 				setNotFound(true);
 			}
-		} catch (error) {
-			console.error("Falha ao buscar dados", error);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+			return data;
+		},
+		enabled: !!searchParams.nf || !!searchParams.serie,
+	});
 
-	const Cases = () =>
-		fetchData({
+	const userData = useQuery({
+		queryKey: ["user", { id: accountLookupID }],
+		queryFn: () =>
+			fetchData<User[]>({
+				url: "/user",
+				params: { id: invoice.data?.[0]?.AccountLookup__c as string },
+			}),
+		enabled: !!invoice.data && !!invoice.data[0].AccountLookup__c,
+	});
+
+	const userProductsData = useQuery({
+		queryKey: ["nfproducts", { id: invoiceID }],
+		queryFn: () =>
+			fetchData<NfProducts[]>({
+				url: "/nfproducts",
+				params: { id: invoice.data?.[0]?.Id as string },
+			}),
+		enabled: !!invoice.data && !!invoice.data[0]?.Id,
+	});
+
+	const getCases = (id: string) =>
+		fetchData<Cases[]>({
 			url: "/cases",
-			setData: setCases,
+			params: { id: id },
 		});
 
-	useEffect(() => {
-		if (invoice.length === 0 && connection === null) {
-			fetchData({
+	const Connection = useQuery({
+		queryKey: ["Connection"],
+		queryFn: () =>
+			fetchData<Connection[]>({
 				url: "/",
-				setData: setConnection as (data: Connection<Schema>) => void,
-			});
-		}
-	}, [invoice.length, connection, setConnection]);
+			}),
+	});
 
-	return { getData, Cases, notFound };
+	return {
+		getCases,
+		setSearchParams,
+		invoice,
+		userData,
+		searchParams,
+		userProductsData,
+		Connection,
+		notFound,
+	};
 };
 
 export { useConnection };

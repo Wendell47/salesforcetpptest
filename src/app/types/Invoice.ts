@@ -1,3 +1,5 @@
+export type setSearchParamsProps = { nf?: string; serie?: string };
+
 export interface Invoice {
 	NinePositionsDocumentNumber__c: string;
 	EnderecoEntrega__c: string;
