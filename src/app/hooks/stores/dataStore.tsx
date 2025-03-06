@@ -2,6 +2,7 @@ import type {
 	Cases,
 	InvoiceWithHistoryObject,
 	NfProducts,
+	setSearchParamsProps,
 	User,
 } from "@/app/types/Invoice";
 import { create } from "zustand";
@@ -14,6 +15,8 @@ type dataStoreProps = {
 	connection: Connection<Schema> | null;
 	NfProducts: NfProducts[];
 	cases: Cases[];
+	searchParams: setSearchParamsProps;
+	setSearchParams: (searchParams: setSearchParamsProps) => void;
 	setUser: (users: User[]) => void;
 	setCases: (users: Cases[]) => void;
 	setIsLoading: (loading: boolean) => void;
@@ -30,6 +33,8 @@ const useInvoiceStore = create<dataStoreProps>((set) => ({
 	connection: null,
 	NfProducts: [],
 	cases: [],
+	searchParams: {},
+	setSearchParams: (searchParams) => set({ searchParams: searchParams }),
 	setIsLoading: (loading) => set({ isLoading: loading }),
 	setCases: (cases) => set({ cases: cases }),
 	setConnection: (con) => set({ connection: con }),

@@ -67,3 +67,9 @@ export interface Cases {
 export type InvoiceWithHistoryObject = Invoice & {
 	CacHistory__c: cacHistoryC;
 };
+
+export interface data {
+	invoice_c: Invoice;
+	user: User | null;
+	userNfProducts: NfProducts[] | null;
+}

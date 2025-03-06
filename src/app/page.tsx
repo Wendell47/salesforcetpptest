@@ -17,20 +17,19 @@ export default function Home() {
 		invoice,
 		searchParams,
 		setSearchParams,
-		userData,
-		userProductsData,
+		//userData,
+		//userProductsData,
 		notFound,
 	} = useConnection();
 	const { data, isLoading } = invoice;
-	const { isFetching } = Connection;
+	const { isFetched } = Connection;
 
 	const nfData = {
-		userData,
-		userProductsData,
+		//userData,
+		//userProductsData,
 		invoice,
 		searchParams,
 	};
-	console.log(data);
 	return (
 		<div className="max-w-4xl w-full flex gap-2 flex-col">
 			<Block>
@@ -59,7 +58,7 @@ export default function Home() {
 					/>
 				</form>
 			</Block>
-			{data && data?.length > 0 ? (
+			{data ? (
 				<NFData nfData={nfData} />
 			) : (
 				<>
@@ -71,7 +70,7 @@ export default function Home() {
 						className="w-full"
 					/>
 
-					{isFetching ? (
+					{!isFetched ? (
 						<>
 							<h1 className="text-xl text-center">CONECTANDO</h1>
 							<div className="text-center">
