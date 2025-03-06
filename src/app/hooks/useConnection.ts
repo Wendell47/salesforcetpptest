@@ -33,9 +33,13 @@ const useConnection = () => {
 	});
 
 	const getCases = (id: string) =>
-		fetchData<Cases[]>({
-			url: "/cases",
-			params: { id: id },
+		useQuery({
+			queryKey: ["cases"],
+			queryFn: () =>
+				fetchData<Cases[]>({
+					url: "/cases",
+					params: { id: id },
+				}),
 		});
 
 	const Connection = useQuery({

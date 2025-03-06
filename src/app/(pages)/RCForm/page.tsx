@@ -11,7 +11,6 @@ import { use, useEffect, useState } from "react";
 export default function RCForm() {
 	const [Text, setText] = useState("");
 	const [textHeight, setHeight] = useState(28);
-	const [hide, setHide] = useState(false);
 	const [hideOptions, setHideOptions] = useState(false);
 	const [index, setIndex] = useState(0);
 
@@ -68,7 +67,7 @@ export default function RCForm() {
 						<h1 className="text-4xl font-bold text-red-600 text-center">
 							Prioridade!
 						</h1>
-						<div className="flex items-end mb-5" onFocus={() => setHide(true)}>
+						<div className="flex items-end mb-5">
 							<label htmlFor="description" className="!hidden">
 								description
 							</label>

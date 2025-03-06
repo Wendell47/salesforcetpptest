@@ -6,13 +6,10 @@ import titles from "@/app/utils/table";
 import { useEffect } from "react";
 
 export default function Cases() {
-	const { cases } = useInvoiceStore();
 	const { getCases } = useConnection();
 
-	
-	const {data} = await getCases("00GHY000000NGti2AG");
-	
-	
+	const { data: cases } = getCases("00GHY000000NGti2AG");
+
 	return (
 		<Table>
 			<Table.Thead>
@@ -27,7 +24,7 @@ export default function Cases() {
 				</tr>
 			</Table.Thead>
 			<Table.Tbody>
-				{cases.map((record) => (
+				{cases?.map((record) => (
 					<tr key={record.Id} className="hover:bg-sky-950 transition">
 						<Table.Th title={record.ClientName__c} />
 						<Table.Th title={record.CLI__c} />
