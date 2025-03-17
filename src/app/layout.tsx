@@ -1,10 +1,8 @@
-
 import type { Metadata } from "next";
 import { Sarabun } from "next/font/google";
-
 import "./globals.css";
-
 import Provider from "./services/provider";
+import { Analytics } from "@vercel/analytics/next";
 
 const sarabun = Sarabun({
 	subsets: ["latin"],
@@ -23,11 +21,12 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="pt-br">
-		<Provider>
-		<body className={`${sarabun.className} antialiased print:p-0`}>
-				{children}
-			</body>
+		<html lang="pt-BR">
+			<Provider>
+				<body className={`${sarabun.className} antialiased print:p-0`}>
+					{children}
+					<Analytics />
+				</body>
 			</Provider>
 		</html>
 	);
