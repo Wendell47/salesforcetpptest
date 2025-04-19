@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/app/components/button";
+import FormInput from "@/app/components/formInput";
 import { useInvoiceStore } from "@/app/hooks/stores/dataStore";
 import { useConnection } from "@/app/hooks/useConnection";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
@@ -11,7 +12,7 @@ import { use, useEffect, useState } from "react";
 export default function RCForm() {
 	const [Text, setText] = useState("");
 	const [textHeight, setHeight] = useState(28);
-	const [hideOptions, setHideOptions] = useState(false);
+	const [hideOptions, setHideOptions] = useState(true);
 	const [index, setIndex] = useState(0);
 
 	const { invoice, setSearchParams } = useConnection();
@@ -19,11 +20,13 @@ export default function RCForm() {
 	const nf = params.get("nf") as string;
 	const serie = params.get("serie") as string;
 
-	const { invoice_c, user, userNfProducts } = invoice.data || {};
+	const { data, isLoading } = invoice;
+	const { invoice_c, user, userNfProducts } = data ?? {};
 	useEffect(() => {
 		if (nf && serie) {
 			setSearchParams({ nf, serie });
 		}
+		setHideOptions(isLoading);
 	}, [nf, serie]);
 
 	function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -52,7 +55,7 @@ export default function RCForm() {
 			</Button>
 			<div
 				id="RCForm"
-				className="p-10 w-[210mm] h-[297mm] rounded-md border bg-white dark:border-neutral-800 dark:bg-neutral-900 print:border-transparent dark:[&_div]:border-neutral-600"
+				className="p-10 w-[210mm] h-[297mm] rounded-md border bg-white dark:border-neutral-800 dark:bg-neutral-900 print:border-transparent dark:[&_div]:border-neutral-600 [&_div]:border-neutral-300"
 			>
 				<div className="flex flex-col items-center gap-2 h-full">
 					<section className="flex flex-1 p-3 flex-col gap-3 ">
@@ -81,17 +84,18 @@ export default function RCForm() {
 						</div>
 						<div className="flex flex-wrap border">
 							<div className="flex-1 basis-[20%] border-r p-2">
-								<h3>
-									<span className="opacity-65">NF:</span>{" "}
-									{invoice_c?.NinePositionsDocumentNumber__c} -{" "}
-									{invoice_c?.Serie__c}
-								</h3>
+								<FormInput
+									title="Nota Fiscal"
+									data={`${invoice_c?.NinePositionsDocumentNumber__c} - ${invoice_c?.Serie__c}`}
+									isLoading={isLoading}
+								/>
 							</div>
 							<div className="flex-[1] basis-[60%] p-2">
-								<p>
-									<span className="opacity-65">CLIENTE:</span>{" "}
-									{user?.ExternalId__c} - {invoice_c?.NameOne__c}
-								</p>
+								<FormInput
+									title="Cliente"
+									data={`${user?.ExternalId__c} - ${invoice_c?.NameOne__c}`}
+									isLoading={isLoading}
+								/>
 							</div>
 						</div>
 						<div className="flex flex-wrap border">
@@ -101,48 +105,38 @@ export default function RCForm() {
 								</h1>
 							</div>
 							<div className="flex-1 basis-1/3 border-r p-2">
-								<label className="opacity-65" htmlFor="BairroEntrega__c">
-									Bairro
-								</label>
-								<input
-									id="BairroEntrega__c"
-									defaultValue={invoice_c?.BairroEntrega__c}
+								<FormInput
+									title="Bairro"
+									data={invoice_c?.BairroEntrega__c}
+									isLoading={isLoading}
 								/>
 							</div>
 							<div className="flex-1 basis-1/3 border-r p-2">
-								<label className="opacity-65" htmlFor="CepEntrega__c">
-									CEP
-								</label>
-								<input
-									id="CepEntrega__c"
-									defaultValue={invoice_c?.CepEntrega__c}
+								<FormInput
+									title="CEP"
+									data={invoice_c?.CepEntrega__c}
+									isLoading={isLoading}
 								/>
 							</div>
 							<div className="flex-1 basis-1/3 p-2">
-								<label className="opacity-65" htmlFor="CidadeEstadoEntrega__c">
-									Cidade/Estado
-								</label>
-								<input
-									id="CidadeEstadoEntrega__c"
-									defaultValue={invoice_c?.CidadeEstadoEntrega__c}
+								<FormInput
+									title="Cidade/Estado"
+									data={invoice_c?.CidadeEstadoEntrega__c}
+									isLoading={isLoading}
 								/>
 							</div>
 							<div className="flex-1 basis-full border-t p-2">
-								<label className="opacity-65" htmlFor="EnderecoEntrega__c">
-									Endereço de Entrega
-								</label>
-								<input
-									id="EnderecoEntrega__c"
-									defaultValue={invoice_c?.EnderecoEntrega__c}
+								<FormInput
+									title="Endereço de Entrega"
+									data={invoice_c?.EnderecoEntrega__c}
+									isLoading={isLoading}
 								/>
 							</div>
 							<div className="flex-1 basis-full border-t p-2">
-								<label className="opacity-65" htmlFor="Referencia__c">
-									Referência
-								</label>
-								<input
-									id="Referencia__c"
-									defaultValue={invoice_c?.Referencia__c}
+								<FormInput
+									title="Referência"
+									data={invoice_c?.Referencia__c}
+									isLoading={isLoading}
 								/>
 							</div>
 						</div>
@@ -151,12 +145,18 @@ export default function RCForm() {
 								<h1 className="font-bold uppercase text-center">Contato</h1>
 							</div>
 							<div className="flex-1 basis-1/2 p-2">
-								<span className="opacity-65">Telefone Principal</span>
-								<p>{user?.DDDPhone__c}</p>
+								<FormInput
+									title="Telefone Principal"
+									data={user?.DDDPhone__c}
+									isLoading={isLoading}
+								/>
 							</div>
 							<div className="flex-1 basis-1/2 border-l p-2">
-								<span className="opacity-65">Secundário</span>
-								<p>{user?.DDDPhoneTwo__c}</p>
+								<FormInput
+									title="Secundário"
+									data={user?.DDDPhoneTwo__c}
+									isLoading={isLoading}
+								/>
 							</div>
 						</div>
 						<div className="flex flex-wrap border relative">

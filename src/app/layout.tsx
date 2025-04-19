@@ -17,17 +17,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-}: Readonly<{
+}: {
 	children: React.ReactNode;
-}>) {
+}) {
 	return (
-		<html lang="pt-BR">
-			<Provider>
+		<Provider>
+			<html lang="pt-BR">
 				<body className={`${sarabun.className} antialiased print:p-0`}>
 					{children}
 					<Analytics />
 				</body>
-			</Provider>
-		</html>
+			</html>
+		</Provider>
 	);
 }
