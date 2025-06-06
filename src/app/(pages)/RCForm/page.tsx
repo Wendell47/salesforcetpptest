@@ -17,7 +17,7 @@ export default function RCForm() {
 
 	const [index, setIndex] = useState(0);
 	const [Text, setText] = useState("");
-	const [textHeight, setHeight] = useState(60);
+	const [textHeight, setHeight] = useState(25);
 	const [hideOptions, setHideOptions] = useState(true);
 
 	const params = useSearchParams();
@@ -44,6 +44,7 @@ export default function RCForm() {
 	useEffect(() => {
 		!nf && !serie && router.push("/");
 	}, [router, nf, serie]);
+
 	const getInt = () => {
 		const bairro = Intinerarios.find(
 			(item) => item.bairro === invoice_c?.BairroEntrega__c,
@@ -77,14 +78,20 @@ export default function RCForm() {
 						<h1 className="text-4xl font-bold text-red-600 text-center">
 							Prioridade!
 						</h1>
-						<div className="flex items-end mb-5">
+						<div className="mb-5">
 							<label htmlFor="description" className="!hidden">
 								description
 							</label>
+							<FormInput
+								title=""
+								className="text-center "
+								data={`${invoice_c?.BairroEntrega__c && getInt()}`}
+								isLoading={isLoading}
+							/>
 							<textarea
 								id="description"
 								className="text-center w-full text-lg font-bold bg-transparent resize-none"
-								defaultValue={`POR GENTILEZA, REALIZAR ENTREGA DO ITEM FALTANTE \n ${invoice_c?.BairroEntrega__c && getInt()}`}
+								defaultValue="POR GENTILEZA, REALIZAR ENTREGA DO ITEM FALTANTE"
 								style={{ height: textHeight }}
 								onChange={(e) => handleChange(e)}
 							/>
