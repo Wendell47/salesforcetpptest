@@ -3,13 +3,16 @@ import Table from "@/app/components/table";
 import { useInvoiceStore } from "@/app/hooks/stores/dataStore";
 import { useConnection } from "@/app/hooks/useConnection";
 import titles from "@/app/utils/table";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Cases() {
 	const { getCases } = useConnection();
+	const [isGrouped, setGrouped] = useState(false);
 
 	const { data: cases } = getCases("00GHY000000NGti2AG");
 
+	const groupedCases = () =>
+		cases ? Object.groupBy(cases, ({ Divisao__c }) => Divisao__c) : [];
 	return (
 		<Table>
 			<Table.Thead>

@@ -82,7 +82,7 @@ export default function NFData({ nfData }: NFDataProps) {
 							<li key={u.Id} className="flex gap-5 flex-wrap flex-auto">
 								<Item
 									title="Código do Produto"
-									dataInfo={u.MaterialNumber__c}
+									dataInfo={u.MaterialNumber__c.slice(10, 20)}
 									className="flex"
 								/>
 								<Item
@@ -90,7 +90,7 @@ export default function NFData({ nfData }: NFDataProps) {
 									dataInfo={u.Name}
 									className="!flex-[10]"
 								/>
-								<Item title="Quantidade" dataInfo={u.Amount__c} />
+								<Item title="Quantidade" dataInfo={u.Amount__c.slice(0, 1)} />
 							</li>
 						))}
 					</ul>

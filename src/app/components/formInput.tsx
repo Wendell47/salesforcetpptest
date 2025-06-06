@@ -13,7 +13,7 @@ export default function FormInput({ title, data, isLoading }: Props) {
 				id={data}
 				defaultValue={isLoading ? "" : data}
 				disabled={isLoading}
-				className={` ${isLoading ? "animate-pulse bg-neutral-800 rounded-md" : ""}`}
+				className={` ${isLoading ? "animate-pulse  w-full dark:bg-neutral-800 bg-neutral-200 rounded-md" : ""}`}
 			/>
 		</>
 	);

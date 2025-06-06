@@ -4,24 +4,26 @@ import FormInput from "@/app/components/formInput";
 import { useInvoiceStore } from "@/app/hooks/stores/dataStore";
 import { useConnection } from "@/app/hooks/useConnection";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import { Intinerarios } from "@/app/utils/intinerarios";
 import { ArrowLeft, ArrowRight, ChevronDown, PenLine } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
 export default function RCForm() {
-	const [Text, setText] = useState("");
-	const [textHeight, setHeight] = useState(28);
-	const [hideOptions, setHideOptions] = useState(true);
-	const [index, setIndex] = useState(0);
-
 	const { invoice, setSearchParams } = useConnection();
+	const { data, isLoading } = invoice;
+	const { invoice_c, user, userNfProducts } = data ?? {};
+
+	const [index, setIndex] = useState(0);
+	const [Text, setText] = useState("");
+	const [textHeight, setHeight] = useState(60);
+	const [hideOptions, setHideOptions] = useState(true);
+
 	const params = useSearchParams();
 	const nf = params.get("nf") as string;
 	const serie = params.get("serie") as string;
 
-	const { data, isLoading } = invoice;
-	const { invoice_c, user, userNfProducts } = data ?? {};
 	useEffect(() => {
 		if (nf && serie) {
 			setSearchParams({ nf, serie });
@@ -30,7 +32,6 @@ export default function RCForm() {
 	}, [nf, serie]);
 
 	function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-		setText(e.target.value);
 		setHeight(e.target.scrollHeight);
 	}
 	function handleOptions(e: number) {
@@ -43,6 +44,12 @@ export default function RCForm() {
 	useEffect(() => {
 		!nf && !serie && router.push("/");
 	}, [router, nf, serie]);
+	const getInt = () => {
+		const bairro = Intinerarios.find(
+			(item) => item.bairro === invoice_c?.BairroEntrega__c,
+		);
+		return bairro ? `DOCA ${bairro.doca} - INT ${bairro.itinerario}` : "";
+	};
 
 	return (
 		<div className="flex gap-4 items-start">
@@ -77,7 +84,7 @@ export default function RCForm() {
 							<textarea
 								id="description"
 								className="text-center w-full text-lg font-bold bg-transparent resize-none"
-								defaultValue="POR GENTILEZA, REALIZAR ENTREGA DO ITEM FALTANTE"
+								defaultValue={`POR GENTILEZA, REALIZAR ENTREGA DO ITEM FALTANTE \n ${invoice_c?.BairroEntrega__c && getInt()}`}
 								style={{ height: textHeight }}
 								onChange={(e) => handleChange(e)}
 							/>
@@ -170,16 +177,25 @@ export default function RCForm() {
 								</button>
 							</div>
 							<div className="flex-1 basis-1/1 p-2">
-								<span className="opacity-65">Código</span>
-								<p>{userNfProducts?.[index].MaterialNumber__c}</p>
+								<FormInput
+									title="Código"
+									data={userNfProducts?.[index].MaterialNumber__c.slice(10, 20)}
+									isLoading={isLoading}
+								/>
 							</div>
 							<div className="flex-1 basis-1/2 border-l p-2">
-								<span className="opacity-65">Item</span>
-								<p>{userNfProducts?.[index].Name}</p>
+								<FormInput
+									title="Item"
+									data={userNfProducts?.[index].Name}
+									isLoading={isLoading}
+								/>
 							</div>
 							<div className="flex-1 basis-1/1 border-l p-2">
-								<span className="opacity-65">Quantidade</span>
-								<p>{userNfProducts?.[index].Amount__c}</p>
+								<FormInput
+									title="Quantidade"
+									data={userNfProducts?.[index].Amount__c.slice(0, 1)}
+									isLoading={isLoading}
+								/>
 							</div>
 
 							<div
@@ -189,10 +205,13 @@ export default function RCForm() {
 									<button
 										key={product.Id}
 										type="button"
-										className="text-left p-2 hover:bg-neutral-200 dark:hover:bg-neutral-500 focus:bg-neutral-500 focus:outline-none"
+										className="text-left p-2 hover:bg-neutral-200 dark:hover:bg-neutral-500 focus:bg-neutral-500 focus:outline-none justify-between flex"
 										onClick={() => handleOptions(index)}
 									>
-										{product.MaterialNumber__c} - {product.Name}
+										<span>
+											{product.MaterialNumber__c.slice(10, 20)} - {product.Name}
+										</span>
+										<span>Quant: {product.Amount__c.slice(0, 1)}</span>
 									</button>
 								))}
 							</div>
@@ -206,7 +225,7 @@ export default function RCForm() {
 							<input
 								id="Signature"
 								className="text-center mb-5 w-full"
-								defaultValue={storage ?? "AOS CUIDADOS DE GUILHERME TRINDADE"}
+								defaultValue={storage ?? ""}
 								onChange={(e) => setStorage(e.target.value)}
 							/>
 							<p className="text-center text-neutral-400">Assinatura:</p>
