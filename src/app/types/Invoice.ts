@@ -54,15 +54,29 @@ export interface UserContacts {
 }
 
 export interface Cases {
-	Id: string;
-	ClientName__c: string;
-	CaseNumber: string;
-	Serie_Nf__c: string;
-	CLI__c: string;
-	CreatedDate: Date;
-	CheckIn__c: Date;
-	Divisao__c: string;
-	Description: string;
+Id: string;
+  CaseNumber: string;
+  CLI__c: string;
+  ClientName__c: string;
+  Invoice__r: {
+    NinePositionsDocumentNumber__c: string;
+    CidadeEstadoEntrega__c: string;
+    BairroEntrega__c: string;
+  };
+  Serie_Nf__c: string;
+  InvoiceItemsId__r: {
+    Name: string;
+  };
+  District__c: string;
+  PriorityTxt__c: string;
+  SAC_Responsavel__c: string;
+  StatusTxt__c: string;
+  Description: string;
+  CheckIn__c: string;
+  CreatedDate: string;
+  Reason: string;
+  OwnerId: string;
+
 }
 export type InvoiceWithHistoryObject = Invoice & {
 	CacHistory__c: cacHistoryC;
